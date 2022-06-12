@@ -25,10 +25,4 @@ resource "oci_containerengine_cluster" "zvone_cluster" {
     }
     service_lb_subnet_ids = [oci_core_subnet.zvone_public_subnet.id]
   }
-
-  timeouts {
-    create = "80m"
-    update = "80m"
-    delete = "80m"
-  }
 }

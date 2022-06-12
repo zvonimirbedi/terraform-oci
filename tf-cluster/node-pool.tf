@@ -42,9 +42,4 @@ resource "oci_containerengine_node_pool" "zvone_cluster_node_pool" {
     key   = "name"
     value = "zvone_cluster"
   }
-  timeouts {
-    create = "80m"
-    update = "80m"
-    delete = "80m"
-  }
 }
