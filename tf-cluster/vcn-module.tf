@@ -5,7 +5,7 @@ module "vcn" {
   version = "3.1.0"
   # Required
   compartment_id = oci_identity_compartment.tf-compartment.id
-  region = "eu-frankfurt-1"
+  region = var.region
   vcn_name = "zvone_vcn"
   vcn_dns_label = "vcn"
 
