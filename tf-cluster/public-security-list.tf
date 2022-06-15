@@ -32,5 +32,15 @@ resource "oci_core_security_list" "zvone_public_security_list" {
       max = 6443
     }
   }
+  ingress_security_rules {
+    stateless   = false
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    protocol    = "6"
+    tcp_options {
+      min = 80
+      max = 80
+    }
+  }
 
 }

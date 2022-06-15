@@ -103,3 +103,8 @@ output "node-size" {
 output "node-shape" {
   value = oci_containerengine_node_pool.zvone_cluster_node_pool.node_shape
 }
+
+output "public-ip" {
+  value = oci_core_public_ip.public_ip.ip_address
+}
+
