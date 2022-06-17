@@ -1,13 +1,13 @@
 # Source from https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_security_list
 
-resource "oci_core_security_list" "zvone_public_security_list" {
+resource "oci_core_security_list" "cluster_public_security_list" {
 
   # Required
-  compartment_id = oci_identity_compartment.tf-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id         = module.vcn.vcn_id
 
   # Optional
-  display_name = "zvone_public_security_list"
+  display_name = var.public_security_list
 
   egress_security_rules {
     stateless        = false
@@ -15,7 +15,46 @@ resource "oci_core_security_list" "zvone_public_security_list" {
     destination_type = "CIDR_BLOCK"
     protocol         = "all"
   }
-
+  egress_security_rules {
+    stateless        = false
+    destination      = "10.0.1.0/24"
+    destination_type = "CIDR_BLOCK"
+    protocol         = "6"
+    tcp_options {
+      min = 31600
+      max = 31600
+    }
+  }
+  egress_security_rules {
+    stateless        = false
+    destination      = "10.0.1.0/24"
+    destination_type = "CIDR_BLOCK"
+    protocol         = "6"
+    tcp_options {
+      min = 10256
+      max = 10256
+    }
+  }
+  ingress_security_rules {
+    protocol    = "6"
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    stateless   = false
+    tcp_options {
+      max = 80
+      min = 80
+    }
+  } 
+  ingress_security_rules {
+    protocol    = "6"
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    stateless   = false
+    tcp_options {
+      max = 8080
+      min = 8080
+    }
+  } 
   ingress_security_rules {
     stateless   = false
     source      = "10.0.0.0/16"
@@ -32,15 +71,4 @@ resource "oci_core_security_list" "zvone_public_security_list" {
       max = 6443
     }
   }
-  ingress_security_rules {
-    stateless   = false
-    source      = "0.0.0.0/0"
-    source_type = "CIDR_BLOCK"
-    protocol    = "6"
-    tcp_options {
-      min = 80
-      max = 80
-    }
-  }
-
 }

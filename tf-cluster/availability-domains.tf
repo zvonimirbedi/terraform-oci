@@ -4,5 +4,5 @@
 # Use <tenancy-ocid> for the compartment OCID.
 
 data "oci_identity_availability_domains" "ads" {
-  compartment_id = oci_identity_compartment.tf-compartment.id
+  compartment_id = var.compartment_ocid
 }

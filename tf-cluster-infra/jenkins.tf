@@ -46,8 +46,9 @@ resource "kubernetes_service_v1" "jenkins_service" {
       app = "jenkins"
     }
     port {
-      port        = 8080
-      target_port = 80
+      port        = 80
+      target_port = 8080
+      node_port   = 31600
       protocol    = "TCP"
     }
     type = "NodePort"
@@ -55,33 +56,4 @@ resource "kubernetes_service_v1" "jenkins_service" {
   depends_on = [
     kubernetes_namespace.namespaces
   ]
-}
-
-resource "kubernetes_ingress_v1" "ingress" {
-  metadata {
-    name      = "ingress-nginx"
-    namespace = "jenkins"
-    labels = {
-      app = "jenkins"
-    }
-  }
-
- spec {
-    ingress_class_name = "nginx"
-    rule {
-      http {
-        path {
-          path = "/*"
-          backend {
-            service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
-              port {
-                number = 80
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 }

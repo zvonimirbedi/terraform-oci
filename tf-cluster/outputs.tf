@@ -2,15 +2,7 @@
 output "all-availability-domains-in-your-tenancy" {
   value = data.oci_identity_availability_domains.ads.availability_domains
 }
-# Outputs for compartment
 
-output "compartment-name" {
-  value = oci_identity_compartment.tf-compartment.name
-}
-
-output "compartment-OCID" {
-  value = oci_identity_compartment.tf-compartment.id
-}
 # The "name" of the availability domain to be used for the compute instance.
 output "name-of-first-availability-domain" {
   value = data.oci_identity_availability_domains.ads.availability_domains[0].name
@@ -38,37 +30,37 @@ output "id-for-for-route-table-that-includes-the-nat-gateway" {
 # Outputs for private security list
 
 output "private-security-list-name" {
-  value = oci_core_security_list.zvone_private_security_list.display_name
+  value = oci_core_security_list.cluster_private_security_list.display_name
 }
 output "private-security-list-OCID" {
-  value = oci_core_security_list.zvone_private_security_list.id
+  value = oci_core_security_list.cluster_private_security_list.id
 }
 
 # Outputs for public security list
 
 output "public-security-list-name" {
-  value = oci_core_security_list.zvone_public_security_list.display_name
+  value = oci_core_security_list.cluster_public_security_list.display_name
 }
 output "public-security-list-OCID" {
-  value = oci_core_security_list.zvone_public_security_list.id
+  value = oci_core_security_list.cluster_public_security_list.id
 }
 
 # Outputs for private subnet
 
 output "private-subnet-name" {
-  value = oci_core_subnet.zvone_private_subnet.display_name
+  value = oci_core_subnet.cluster_private_subnet.display_name
 }
 output "private-subnet-OCID" {
-  value = oci_core_subnet.zvone_private_subnet.id
+  value = oci_core_subnet.cluster_private_subnet.id
 }
 
 # Outputs for public subnet
 
 output "public-subnet-name" {
-  value = oci_core_subnet.zvone_public_subnet.display_name
+  value = oci_core_subnet.cluster_public_subnet.display_name
 }
 output "public-subnet-OCID" {
-  value = oci_core_subnet.zvone_public_subnet.id
+  value = oci_core_subnet.cluster_public_subnet.id
 }
 
 # Outputs for k8s cluster
@@ -89,22 +81,21 @@ output "cluster-state" {
 # Outputs for k8s node pool
 
 output "node-pool-name" {
-  value = oci_containerengine_node_pool.zvone_cluster_node_pool.name
+  value = oci_containerengine_node_pool.cluster_node_pool_1.name
 }
 output "node-pool-OCID" {
-  value = oci_containerengine_node_pool.zvone_cluster_node_pool.id
+  value = oci_containerengine_node_pool.cluster_node_pool_1.id
 }
 output "node-pool-kubernetes-version" {
-  value = oci_containerengine_node_pool.zvone_cluster_node_pool.kubernetes_version
+  value = oci_containerengine_node_pool.cluster_node_pool_1.kubernetes_version
 }
 output "node-size" {
-  value = oci_containerengine_node_pool.zvone_cluster_node_pool.node_config_details[0].size
+  value = oci_containerengine_node_pool.cluster_node_pool_1.node_config_details[0].size
 }
 output "node-shape" {
-  value = oci_containerengine_node_pool.zvone_cluster_node_pool.node_shape
+  value = oci_containerengine_node_pool.cluster_node_pool_1.node_shape
 }
 
-output "public-ip" {
-  value = oci_core_public_ip.public_ip.ip_address
+output "cluster_load_balancer_public_ip" {
+    value = [for ip in oci_network_load_balancer_network_load_balancer.cluster_nlb.ip_addresses : ip if ip.is_public == true]
 }
-

@@ -1,13 +1,13 @@
 # Source from https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_security_list
 
-resource "oci_core_security_list" "zvone_private_security_list" {
+resource "oci_core_security_list" "cluster_private_security_list" {
 
   # Required
-  compartment_id = oci_identity_compartment.tf-compartment.id
+  compartment_id = var.compartment_ocid
   vcn_id         = module.vcn.vcn_id
 
   # Optional
-  display_name = "zvone_private_security_list"
+  display_name = var.private_security_list
 
   egress_security_rules {
     stateless        = false
@@ -15,42 +15,31 @@ resource "oci_core_security_list" "zvone_private_security_list" {
     destination_type = "CIDR_BLOCK"
     protocol         = "all"
   }
-
+  
   ingress_security_rules {
     stateless   = false
     source      = "10.0.0.0/16"
     source_type = "CIDR_BLOCK"
-    # Get protocol numbers from https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml TCP is 6
-    protocol = "6"
+    protocol    = "all"
+  }
+  ingress_security_rules {
+    stateless   = false
+    source      = "10.0.0.0/24"
+    source_type = "CIDR_BLOCK"
+    protocol    = "6"
     tcp_options {
-      min = 22
-      max = 22
+      min = 10256
+      max = 10256
     }
   }
   ingress_security_rules {
     stateless   = false
-    source      = "0.0.0.0/0"
+    source      = "10.0.0.0/24"
     source_type = "CIDR_BLOCK"
-    # Get protocol numbers from https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml ICMP is 1
-    protocol = "1"
-
-    # For ICMP type and code see: https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
-    icmp_options {
-      type = 3
-      code = 4
+    protocol    = "6"
+    tcp_options {
+      min = 31600
+      max = 31600
     }
   }
-  ingress_security_rules {
-    stateless   = false
-    source      = "10.0.0.0/16"
-    source_type = "CIDR_BLOCK"
-    # Get protocol numbers from https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml ICMP is 1
-    protocol = "1"
-
-    # For ICMP type and code see: https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml
-    icmp_options {
-      type = 3
-    }
-  }
-
 }

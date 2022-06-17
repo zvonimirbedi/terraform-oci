@@ -1,23 +1,23 @@
 # Source from https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/containerengine_node_pool
 
-resource "oci_containerengine_node_pool" "zvone_cluster_node_pool" {
+resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
   # Required
   cluster_id         = oci_containerengine_cluster.zvone_cluster.id
-  compartment_id     = oci_identity_compartment.tf-compartment.id
+  compartment_id     = var.compartment_ocid
   kubernetes_version = "v1.23.4"
-  name               = "zvone_pool_1"
+  name               = var.cluster_node_pool_1_name
   node_config_details {
     placement_configs {
       availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
-      subnet_id           = oci_core_subnet.zvone_private_subnet.id
+      subnet_id           = oci_core_subnet.cluster_private_subnet.id
     } 
     placement_configs{
       availability_domain = data.oci_identity_availability_domains.ads.availability_domains[1].name
-      subnet_id = oci_core_subnet.zvone_private_subnet.id
+      subnet_id = oci_core_subnet.cluster_private_subnet.id
     }
     placement_configs{
       availability_domain = data.oci_identity_availability_domains.ads.availability_domains[2].name
-      subnet_id = oci_core_subnet.zvone_private_subnet.id
+      subnet_id = oci_core_subnet.cluster_private_subnet.id
     }
     size = 1
   }
@@ -40,6 +40,6 @@ resource "oci_containerengine_node_pool" "zvone_cluster_node_pool" {
   # Optional
   initial_node_labels {
     key   = "name"
-    value = "zvone_cluster"
+    value = var.cluster_name
   }
 }

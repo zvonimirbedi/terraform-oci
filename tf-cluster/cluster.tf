@@ -2,15 +2,15 @@
 
 resource "oci_containerengine_cluster" "zvone_cluster" {
   # Required
-  compartment_id     = oci_identity_compartment.tf-compartment.id
+  compartment_id     = var.compartment_ocid
   kubernetes_version = "v1.23.4"
-  name               = "zvone_cluster"
+  name               = var.cluster_name
   vcn_id             = module.vcn.vcn_id
   endpoint_config {
 
     #Optional
     is_public_ip_enabled = true
-    subnet_id            = oci_core_subnet.zvone_public_subnet.id
+    subnet_id            = oci_core_subnet.cluster_public_subnet.id
   }
 
   # Optional
@@ -23,6 +23,6 @@ resource "oci_containerengine_cluster" "zvone_cluster" {
       pods_cidr     = "10.244.0.0/16"
       services_cidr = "10.96.0.0/16"
     }
-    service_lb_subnet_ids = [oci_core_subnet.zvone_public_subnet.id]
+    service_lb_subnet_ids = [oci_core_subnet.cluster_public_subnet.id]
   }
 }
