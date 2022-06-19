@@ -1,4 +1,4 @@
-resource "kubernetes_deployment" "jenkins_deployment" {
+resource "kubernetes_deployment_v1" "jenkins_deployment" {
   metadata {
     name = "jenkins"
     labels = {
@@ -27,7 +27,7 @@ resource "kubernetes_deployment" "jenkins_deployment" {
             container_port = 8080
           }
         }
-        service_account_name = kubernetes_service_account.jenkins_service_account.metadata[0].name
+        service_account_name = kubernetes_service_account_v1.jenkins_service_account.metadata[0].name
       }
     }
   }
@@ -43,15 +43,13 @@ resource "kubernetes_service_v1" "jenkins_service" {
   }
   spec {
     selector = {
-      app = "jenkins"
+      app = kubernetes_deployment_v1.jenkins_deployment.metadata[0].name
     }
     port {
-      port        = 80
+      port        = 8080
       target_port = 8080
-      node_port   = 31600
       protocol    = "TCP"
     }
-    type = "NodePort"
   }
   depends_on = [
     kubernetes_namespace.namespaces

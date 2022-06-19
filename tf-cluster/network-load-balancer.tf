@@ -24,16 +24,16 @@ resource "oci_network_load_balancer_backend_set" "cluster_nlb_backend_set" {
 }
 
 resource "oci_network_load_balancer_backend" "cluster_nlb_backend" {
-  count                    = length([for node in oci_containerengine_node_pool.cluster_node_pool_1.nodes : node if node.state == "ACTIVE"])
+  count                    = var.node_pool_1_count
   backend_set_name         = oci_network_load_balancer_backend_set.cluster_nlb_backend_set.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.cluster_nlb.id
-  port                     = 31600
+  port                     = "31600"
   target_id                = [for node in oci_containerengine_node_pool.cluster_node_pool_1.nodes : node if node.state == "ACTIVE"][count.index].id
 }
 
-resource "oci_network_load_balancer_listener" "cluster_nlb_listener" {
+resource "oci_network_load_balancer_listener" "cluster_nlb_listener_port_80" {
   default_backend_set_name = oci_network_load_balancer_backend_set.cluster_nlb_backend_set.name
-  name                     = "zvone-cluster-nlb-listener"
+  name                     = "cluster-nlb-listener-port-80"
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.cluster_nlb.id
   port                     = "80"
   protocol                 = "TCP"

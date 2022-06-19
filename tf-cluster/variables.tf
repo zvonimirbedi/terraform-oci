@@ -44,3 +44,8 @@ variable "network_load_balancer_name" {
   description = "Cluster Network Load balancer Name"
 }
 
+variable "node_pool_1_count" {
+  type        = string
+  description = "Number of Nodes in node pool 1"
+}
+

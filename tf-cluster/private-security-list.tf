@@ -42,4 +42,14 @@ resource "oci_core_security_list" "cluster_private_security_list" {
       max = 31600
     }
   }
+  ingress_security_rules {
+    stateless   = false
+    source      = "10.0.0.0/24"
+    source_type = "CIDR_BLOCK"
+    protocol    = "6"
+    tcp_options {
+      min = 80
+      max = 80
+    }
+  }
 }

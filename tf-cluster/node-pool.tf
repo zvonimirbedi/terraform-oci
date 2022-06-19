@@ -19,7 +19,7 @@ resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
       availability_domain = data.oci_identity_availability_domains.ads.availability_domains[2].name
       subnet_id = oci_core_subnet.cluster_private_subnet.id
     }
-    size = 1
+    size = var.node_pool_1_count
   }
   # https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm#vmshapes__vm-standard
   # AMD processor
