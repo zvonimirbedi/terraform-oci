@@ -75,6 +75,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx" {
   metadata {
     name = "ingress-nginx"
     namespace = "jenkins"
+    annotations = {
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+    }
   }
   spec {
     ingress_class_name = kubernetes_ingress_class_v1.ingress_class.metadata.0.name
@@ -90,22 +93,6 @@ resource "kubernetes_ingress_v1" "ingress_nginx" {
 
     rule {
       host = "jenkins.zvonimirbedi.com"
-      http {
-        path {
-          backend {
-            service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
-              port {
-                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
-              }
-            }
-          }
-        }
-      }
-    }
-
-    rule {
-      host = "grafana.zvonimirbedi.com"
       http {
         path {
           backend {
