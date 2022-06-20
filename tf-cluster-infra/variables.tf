@@ -23,3 +23,8 @@ variable "docker_registry_password" {
   type        = string
   description = "Docker registry password"
 }
+
+variable "nginx_auth" {
+  type        = string
+  description = "Ingress Nginx Authentication username:password"
+}

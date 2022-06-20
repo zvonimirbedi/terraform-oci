@@ -22,13 +22,26 @@ resource "kubernetes_deployment_v1" "ingress_nginx_controller_deployment" {
       }
       spec {
         container {
-          image = "nginx/nginx-ingress:2.2.2"
+          image = "k8s.gcr.io/ingress-nginx/controller:v1.2.0@sha256:d8196e3bc1e72547c5dec66d6556c0ff92a23f6d0919b206be170bc90d5f9185"
           name  = "ingress-nginx-controller"
-           args = [
-            "--v=3",
-            "--report-ingress-status", 
-            "--enable-leader-election=false"
-          ]
+           args = []
+          
+          env {
+            name = "POD_NAME"
+            value_from {
+              field_ref {
+                field_path = "metadata.name"
+              }
+            }
+          }
+          env {
+            name = "POD_NAMESPACE"
+            value_from {
+              field_ref {
+                field_path = "metadata.namespace"
+              }
+            }
+          }
           port {
             container_port = 80
           }
@@ -48,6 +61,7 @@ resource "kubernetes_service_v1" "ingress_service" {
     namespace = "jenkins"
   }
   spec {
+    external_traffic_policy = "Local"
     selector = {
       app = kubernetes_deployment_v1.ingress_nginx_controller_deployment.metadata.0.name
     }
@@ -67,44 +81,6 @@ resource "kubernetes_ingress_class_v1" "ingress_class" {
   }
 
   spec {
-    controller = "nginx.org/ingress-controller"
-  }
-}
-
-resource "kubernetes_ingress_v1" "ingress_nginx" {
-  metadata {
-    name = "ingress-nginx"
-    namespace = "jenkins"
-    annotations = {
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
-    }
-  }
-  spec {
-    ingress_class_name = kubernetes_ingress_class_v1.ingress_class.metadata.0.name
-
-    default_backend {
-      service {
-        name = kubernetes_service_v1.jenkins_service.metadata.0.name
-        port {
-          number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
-        }
-      }
-    }
-
-    rule {
-      host = "jenkins.zvonimirbedi.com"
-      http {
-        path {
-          backend {
-            service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
-              port {
-                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
-              }
-            }
-          }
-        }
-      }
-    }
+    controller = "k8s.io/ingress-nginx"
   }
 }
