@@ -1,7 +1,8 @@
 /*
-output "k8s-cluster-id" {
-  value = oci_containerengine_cluster.zvone_cluster.id
+output "cert_manager_body" {
+  value = data.http.cert_manager_manifest.body
 }
+
 output "public_subnet_id" {
   value = oci_core_subnet.zvone_public_subnet.id
 }
