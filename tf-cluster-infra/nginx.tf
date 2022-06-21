@@ -4,7 +4,7 @@ resource "kubernetes_deployment_v1" "ingress_nginx_controller_deployment" {
     labels = {
       app = "ingress-nginx-controller"
     }
-    namespace = "jenkins"
+    namespace = "tools"
   }
   spec {
     replicas = 1
@@ -17,7 +17,7 @@ resource "kubernetes_deployment_v1" "ingress_nginx_controller_deployment" {
       metadata {
         labels = {
           app = "ingress-nginx-controller"
-          namespace = "jenkins"
+          namespace = "tools"
         }
       }
       spec {
@@ -46,7 +46,7 @@ resource "kubernetes_deployment_v1" "ingress_nginx_controller_deployment" {
             container_port = 80
           }
         }
-      service_account_name = kubernetes_service_account_v1.jenkins_service_account.metadata[0].name
+      service_account_name = kubernetes_service_account_v1.admin_service_account.metadata[0].name
       }
     }
   }
@@ -58,7 +58,7 @@ resource "kubernetes_deployment_v1" "ingress_nginx_controller_deployment" {
 resource "kubernetes_service_v1" "ingress_service" {
   metadata {
     name = "ingress-service"
-    namespace = "jenkins"
+    namespace = "tools"
   }
   spec {
     external_traffic_policy = "Local"

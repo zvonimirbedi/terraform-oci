@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
   metadata {
     name = "ingress-nginx-jenkins"
-    namespace = "jenkins"
+    namespace = "tools"
     annotations = {
       # type of authentication
       "nginx.ingress.kubernetes.io/auth-type" = "basic"

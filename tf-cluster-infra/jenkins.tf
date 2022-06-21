@@ -4,7 +4,7 @@ resource "kubernetes_deployment_v1" "jenkins_deployment" {
     labels = {
       app = "jenkins"
     }
-    namespace = "jenkins"
+    namespace = "tools"
   }
   spec {
     replicas = 1
@@ -27,7 +27,7 @@ resource "kubernetes_deployment_v1" "jenkins_deployment" {
             container_port = 8080
           }
         }
-        service_account_name = kubernetes_service_account_v1.jenkins_service_account.metadata[0].name
+        service_account_name = kubernetes_service_account_v1.admin_service_account.metadata[0].name
       }
     }
   }
@@ -39,7 +39,7 @@ resource "kubernetes_deployment_v1" "jenkins_deployment" {
 resource "kubernetes_service_v1" "jenkins_service" {
   metadata {
     name      = "jenkins-service"
-    namespace = "jenkins"
+    namespace = "tools"
   }
   spec {
     selector = {

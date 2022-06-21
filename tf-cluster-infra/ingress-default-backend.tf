@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "ingress_nginx_default_backend" {
   metadata {
     name = "ingress-nginx-default-backend"
-    namespace = "jenkins"
+    namespace = "tools"
     annotations = {
       # type of authentication
       "nginx.ingress.kubernetes.io/auth-type" = "basic"

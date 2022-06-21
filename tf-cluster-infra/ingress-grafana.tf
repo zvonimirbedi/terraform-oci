@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
   metadata {
     name = "ingress-rule-grafana"
-    namespace = "jenkins"
+    namespace = "tools"
     annotations = {
       # type of authentication
       "nginx.ingress.kubernetes.io/auth-type" = "basic"
