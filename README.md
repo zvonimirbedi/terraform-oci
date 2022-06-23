@@ -6,3 +6,6 @@ Terraform OCI repo
 * terraform plan -var-file="../variables.tfvars"
 * terraform apply -auto-approve -var-file="../variables.tfvars"
 * terraform destroy -auto-approve -var-file="../variables.tfvars"
+
+
+kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yam

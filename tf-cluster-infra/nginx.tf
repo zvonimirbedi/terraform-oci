@@ -66,9 +66,17 @@ resource "kubernetes_service_v1" "ingress_service" {
       app = kubernetes_deployment_v1.ingress_nginx_controller_deployment.metadata.0.name
     }
     port {
+      name        = "http"
       port        = 80
       target_port = 80
-      node_port   = 31600
+      node_port   = 30080
+      protocol    = "TCP"
+    }
+    port {
+      name        = "https"
+      port        = 443
+      target_port = 443
+      node_port   = 30443
       protocol    = "TCP"
     }
     type = "NodePort"

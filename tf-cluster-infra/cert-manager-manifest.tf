@@ -11,5 +11,4 @@ data "kubectl_file_documents" "cert_manager_docs" {
 resource "kubectl_manifest" "cert_manager_manifest" {
     count     = length(data.kubectl_file_documents.cert_manager_docs.documents)
     yaml_body = element(data.kubectl_file_documents.cert_manager_docs.documents, count.index)
-
 }

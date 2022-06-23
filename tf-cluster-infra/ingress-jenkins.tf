@@ -28,5 +28,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
         }
       }
     }
+    tls {
+    }
   }
 }

@@ -4,9 +4,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
     namespace = "tools"
     annotations = {
       # type of authentication
-      "nginx.ingress.kubernetes.io/auth-type" = "basic"
-      "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
-      "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
+      # "nginx.ingress.kubernetes.io/auth-type" = "basic"
+      # "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
+      # "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
     }
   }
@@ -27,6 +27,10 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
           }
         }
       }
+    }
+    tls {
+      hosts = ["grafana.zvonimirbedi.com"]
+      # secret_name = kubernetes_manifest.cluster_issuer_zvonimir_bedi.manifest.spec.acme.privateKeySecretRef.name
     }
   }
 }

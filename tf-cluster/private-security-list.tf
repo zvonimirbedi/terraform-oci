@@ -38,8 +38,8 @@ resource "oci_core_security_list" "cluster_private_security_list" {
     source_type = "CIDR_BLOCK"
     protocol    = "6"
     tcp_options {
-      min = 31600
-      max = 31600
+      min = 30080
+      max = 30080
     }
   }
   ingress_security_rules {
@@ -48,8 +48,8 @@ resource "oci_core_security_list" "cluster_private_security_list" {
     source_type = "CIDR_BLOCK"
     protocol    = "6"
     tcp_options {
-      min = 80
-      max = 80
+      min = 30443
+      max = 30443
     }
   }
 }

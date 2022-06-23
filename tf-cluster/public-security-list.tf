@@ -21,10 +21,20 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     destination_type = "CIDR_BLOCK"
     protocol         = "6"
     tcp_options {
-      min = 31600
-      max = 31600
+      min = 30080
+      max = 30080
     }
   }
+  egress_security_rules {
+    stateless        = false
+    destination      = "10.0.1.0/24"
+    destination_type = "CIDR_BLOCK"
+    protocol         = "6"
+    tcp_options {
+      min = 30443
+      max = 30443
+    }
+  }  
   egress_security_rules {
     stateless        = false
     destination      = "10.0.1.0/24"
@@ -43,6 +53,16 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     tcp_options {
       max = 80
       min = 80
+    }
+  }
+  ingress_security_rules {
+    protocol    = "6"
+    source      = "0.0.0.0/0"
+    source_type = "CIDR_BLOCK"
+    stateless   = false
+    tcp_options {
+      max = 443
+      min = 443
     }
   }
   ingress_security_rules {
