@@ -8,6 +8,8 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
       "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+      "cert-manager.io/cluster-issuer" = "clusterissuer-jenkins-zvonimirbedi-com"
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
     }
   }
   spec {
@@ -29,6 +31,8 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       }
     }
     tls {
+      hosts = ["jenkins.zvonimirbedi.com"]
+      secret_name = "clusterissuer-jenkins-zvonimirbedi-com"
     }
   }
 }

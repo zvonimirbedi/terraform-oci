@@ -8,4 +8,6 @@ Terraform OCI repo
 * terraform destroy -auto-approve -var-file="../variables.tfvars"
 
 
-kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.0/cert-manager.yam
+kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+
+kubectl apply -f ../kube-issuer/issuer-grafana.yaml 
