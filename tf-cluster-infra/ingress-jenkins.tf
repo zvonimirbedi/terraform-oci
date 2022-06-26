@@ -30,8 +30,23 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
         }
       }
     }
+    rule {
+      host = "www.jenkins.zvonimirbedi.com"
+      http {
+        path {
+          backend {
+            service {
+              name = kubernetes_service_v1.jenkins_service.metadata.0.name
+              port {
+                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
+              }
+            }
+          }
+        }
+      }
+    }
     tls {
-      hosts = ["jenkins.zvonimirbedi.com"]
+      hosts = ["jenkins.zvonimirbedi.com", "www.jenkins.zvonimirbedi.com"]
       secret_name = "clusterissuer-jenkins-zvonimirbedi-com"
     }
   }

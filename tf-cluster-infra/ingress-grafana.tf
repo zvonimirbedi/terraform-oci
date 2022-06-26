@@ -30,8 +30,23 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
         }
       }
     }
+    rule {
+      host = "www.grafana.zvonimirbedi.com"
+      http {
+        path {
+          backend {
+            service {
+              name = kubernetes_service_v1.jenkins_service.metadata.0.name
+              port {
+                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
+              }
+            }
+          }
+        }
+      }
+    }
     tls {
-      hosts = ["grafana.zvonimirbedi.com"]
+      hosts = ["grafana.zvonimirbedi.com", "www.grafana.zvonimirbedi.com"]
       secret_name = "clusterissuer-grafana-zvonimirbedi-com"
     }
   }
