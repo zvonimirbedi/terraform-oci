@@ -31,7 +31,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       }
     }
     rule {
-      host = join("", ["www", var.jenkins_url])
+      host = join(".", ["www", var.jenkins_url])
       http {
         path {
           backend {
@@ -46,7 +46,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       }
     }
     tls {
-      hosts = [var.jenkins_url, join("", ["www", var.jenkins_url])]
+      hosts = [var.jenkins_url, join(".", ["www", var.jenkins_url])]
       secret_name = var.clusterissuer_jenkins
     }
   }

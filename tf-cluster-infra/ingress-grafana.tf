@@ -31,7 +31,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
       }
     }
     rule {
-      host = join("", ["www", var.grafana_url])
+      host = join(".", ["www", var.grafana_url])
       http {
         path {
           backend {
@@ -46,7 +46,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
       }
     }
     tls {
-      hosts = [var.grafana_url, join("", ["www", var.grafana_url])]
+      hosts = [var.grafana_url, join(".", ["www", var.grafana_url])]
       secret_name = var.clusterissuer_grafana
     }
   }

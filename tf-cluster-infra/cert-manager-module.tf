@@ -7,11 +7,11 @@ module "cert_manager" {
   create_namespace                       = false
   certificates = {   
     "${var.clusterissuer_jenkins}" = {
-      dns_names = [var.jenkins_url, join("", ["www", var.jenkins_url])]
+      dns_names = [var.jenkins_url, join(".", ["www", var.jenkins_url])]
       namespace = "tools"
     } 
     "${var.clusterissuer_grafana}" = {
-      dns_names = [var.grafana_url, join("", ["www", var.grafana_url])]
+      dns_names = [var.grafana_url, join(".", ["www", var.grafana_url])]
       namespace = "tools"
     } 
   }
