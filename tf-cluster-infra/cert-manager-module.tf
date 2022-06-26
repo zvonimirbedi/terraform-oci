@@ -6,14 +6,12 @@ module "cert_manager" {
   namespace_name                         = "tools"
   create_namespace                       = false
   certificates = {   
-    "clusterissuer-jenkins-zvonimirbedi-com" = {
-      secret_labels = {"cert_manager" = "true"}
-      dns_names = ["jenkins.zvonimirbedi.com", "www.jenkins.zvonimirbedi.com"]
+    "${var.clusterissuer_jenkins}" = {
+      dns_names = [var.jenkins_url, join("", ["www", var.jenkins_url])]
       namespace = "tools"
     } 
-    "clusterissuer-grafana-zvonimirbedi-com" = {
-      secret_labels = {"cert_manager" = "true"}
-      dns_names = ["grafana.zvonimirbedi.com", "www.grafana.zvonimirbedi.com"]
+    "${var.clusterissuer_grafana}" = {
+      dns_names = [var.grafana_url, join("", ["www", var.grafana_url])]
       namespace = "tools"
     } 
   }

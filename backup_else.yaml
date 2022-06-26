@@ -1,0 +1,88 @@
+apiVersion: v1
+items:
+- apiVersion: cert-manager.io/v1
+  kind: Certificate
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"cert-manager.io/v1","kind":"Certificate","metadata":{"annotations":{},"name":"clusterissuer-grafana-zvonimirbedi-com","namespace":"tools"},"spec":{"dnsNames":["grafana.zvonimirbedi.com","wwwgrafana.zvonimirbedi.com"],"duration":"2160h","ipAddresses":[],"isCA":false,"issuerRef":{"group":"","kind":"ClusterIssuer","name":"cert-manager"},"private_key":{"algorithm":"RSA","encoding":"PKCS1","size":2048},"renewBefore":"360h","secretName":"clusterissuer-grafana-zvonimirbedi-com-tls","secretTemplate":{"annotations":{},"labels":{}},"subject":{"organizations":[]},"uris":[],"usages":["server auth","client auth"]}}
+    creationTimestamp: "2022-06-26T14:11:52Z"
+    generation: 3
+    name: clusterissuer-grafana-zvonimirbedi-com
+    namespace: tools
+    ownerReferences:
+    - apiVersion: networking.k8s.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Ingress
+      name: ingress-nginx-grafana
+      uid: 79526dfc-4a92-4b08-8489-aa507f0aaed1
+    resourceVersion: "1153236"
+    uid: 8bce2581-a067-41a3-aa0b-84486e49f90c
+  spec:
+    dnsNames:
+    - grafana.zvonimirbedi.com
+    - wwwgrafana.zvonimirbedi.com
+    issuerRef:
+      group: cert-manager.io
+      kind: ClusterIssuer
+      name: clusterissuer-grafana-zvonimirbedi-com
+    secretName: clusterissuer-grafana-zvonimirbedi-com
+    usages:
+    - digital signature
+    - key encipherment
+  status:
+    conditions:
+    - lastTransitionTime: "2022-06-26T14:14:25Z"
+      message: Certificate is up to date and has not expired
+      observedGeneration: 3
+      reason: Ready
+      status: "True"
+      type: Ready
+    notAfter: "2022-09-24T13:14:23Z"
+    notBefore: "2022-06-26T13:14:24Z"
+    renewalTime: "2022-08-25T13:14:23Z"
+    revision: 1
+- apiVersion: cert-manager.io/v1
+  kind: Certificate
+  metadata:
+    creationTimestamp: "2022-06-26T14:13:03Z"
+    generation: 1
+    name: clusterissuer-jenkins-zvonimirbedi-com
+    namespace: tools
+    ownerReferences:
+    - apiVersion: networking.k8s.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Ingress
+      name: ingress-nginx-jenkins
+      uid: 063e905a-23c3-40f5-bad7-8ead7f9ef26c
+    resourceVersion: "1153209"
+    uid: 173621f9-111f-4e81-bcbe-4cfca5555ce4
+  spec:
+    dnsNames:
+    - jenkins.zvonimirbedi.com
+    - wwwjenkins.zvonimirbedi.com
+    issuerRef:
+      group: cert-manager.io
+      kind: ClusterIssuer
+      name: clusterissuer-jenkins-zvonimirbedi-com
+    secretName: clusterissuer-jenkins-zvonimirbedi-com
+    usages:
+    - digital signature
+    - key encipherment
+  status:
+    conditions:
+    - lastTransitionTime: "2022-06-26T14:14:24Z"
+      message: Certificate is up to date and has not expired
+      observedGeneration: 1
+      reason: Ready
+      status: "True"
+      type: Ready
+    notAfter: "2022-09-24T13:14:22Z"
+    notBefore: "2022-06-26T13:14:23Z"
+    renewalTime: "2022-08-25T13:14:22Z"
+    revision: 1
+kind: List
+metadata:
+  resourceVersion: ""

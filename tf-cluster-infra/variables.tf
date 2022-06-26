@@ -28,3 +28,23 @@ variable "nginx_auth" {
   type        = string
   description = "Ingress Nginx Authentication username:password"
 }
+
+variable "jenkins_url" {
+  type        = string
+  description = "DNS for Jenkins"
+}
+
+variable "grafana_url" {
+  type        = string
+  description = "DNS for Grafana"
+}
+
+variable "clusterissuer_jenkins" {
+  type        = string
+  description = "Issuer cert-manager for Jenkins"
+}
+
+variable "clusterissuer_grafana" {
+  type        = string
+  description = "Issuer cert-manager for Grafana"
+}

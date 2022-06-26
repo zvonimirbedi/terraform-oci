@@ -8,7 +8,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
       "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
-      "cert-manager.io/cluster-issuer" = "clusterissuer-jenkins-zvonimirbedi-com"
+      "cert-manager.io/cluster-issuer" = var.clusterissuer_jenkins
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
     }
   }
@@ -16,7 +16,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
     ingress_class_name = kubernetes_ingress_class_v1.ingress_class.metadata.0.name
 
     rule {
-      host = "jenkins.zvonimirbedi.com"
+      host = var.jenkins_url
       http {
         path {
           backend {
@@ -31,7 +31,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       }
     }
     rule {
-      host = "www.jenkins.zvonimirbedi.com"
+      host = join("", ["www", var.jenkins_url])
       http {
         path {
           backend {
@@ -46,8 +46,8 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       }
     }
     tls {
-      hosts = ["jenkins.zvonimirbedi.com", "www.jenkins.zvonimirbedi.com"]
-      secret_name = "clusterissuer-jenkins-zvonimirbedi-com"
+      hosts = [var.jenkins_url, join("", ["www", var.jenkins_url])]
+      secret_name = var.clusterissuer_jenkins
     }
   }
 }
