@@ -4,9 +4,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
     namespace = "tools"
     annotations = {
       # type of authentication
-      # "nginx.ingress.kubernetes.io/auth-type" = "basic"
-      # "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
-      # "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
+      "nginx.ingress.kubernetes.io/auth-type" = "basic"
+      "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
+      "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
 
       "cert-manager.io/cluster-issuer" = var.clusterissuer_grafana
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
@@ -21,9 +21,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
+              name = kubernetes_service_v1.grafana_service.metadata.0.name
               port {
-                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
+                number = kubernetes_service_v1.grafana_service.spec[0].port[0].target_port
               }
             }
           }
@@ -36,9 +36,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
+              name = kubernetes_service_v1.grafana_service.metadata.0.name
               port {
-                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
+                number = kubernetes_service_v1.grafana_service.spec[0].port[0].target_port
               }
             }
           }

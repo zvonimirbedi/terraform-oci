@@ -1,8 +1,8 @@
-resource "kubernetes_deployment_v1" "jenkins_deployment" {
+resource "kubernetes_deployment_v1" "grafana_deployment" {
   metadata {
-    name = "jenkins"
+    name = "grafana"
     labels = {
-      app = "jenkins"
+      app = "grafana"
     }
     namespace = "tools"
   }
@@ -10,21 +10,21 @@ resource "kubernetes_deployment_v1" "jenkins_deployment" {
     replicas = 1
     selector {
       match_labels = {
-        app = "jenkins"
+        app = "grafana"
       }
     }
     template {
       metadata {
         labels = {
-          app = "jenkins"
+          app = "grafana"
         }
       }
       spec {
         container {
-          image = "jenkins/jenkins:lts"
-          name  = "jenkins"
+          image = "grafana/grafana"
+          name  = "grafana"
           port {
-            container_port = 8080
+            container_port = 3000
           }
         }
         service_account_name = kubernetes_service_account_v1.admin_service_account.metadata[0].name
@@ -36,18 +36,18 @@ resource "kubernetes_deployment_v1" "jenkins_deployment" {
   ]
 }
 
-resource "kubernetes_service_v1" "jenkins_service" {
+resource "kubernetes_service_v1" "grafana_service" {
   metadata {
-    name      = "jenkins-service"
+    name      = "grafana-service"
     namespace = "tools"
   }
   spec {
     selector = {
-      app = kubernetes_deployment_v1.jenkins_deployment.metadata[0].name
+      app = kubernetes_deployment_v1.grafana_deployment.metadata[0].name
     }
     port {
       port        = 8080
-      target_port = 8080
+      target_port = 3000
       protocol    = "TCP"
     }
   }
