@@ -1,12 +1,12 @@
 resource "kubernetes_persistent_volume_v1" "cluster_peristent_volume" {
   metadata {
-    name = "cluster-peristent-volume"
+    name = data.oci_core_volumes.cluster_fs_volume.volumes[0].id
     labels = {
       "failure-domain.beta.kubernetes.io/region" = var.region
-      "failure-domain.beta.kubernetes.io/zone" = "EU-FRANKFURT-1-AD-3"
+      "failure-domain.beta.kubernetes.io/zone" = replace(data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain, "/.*:/","")
     }
     annotations = {
-      "ociAvailabilityDomain" = "EU-FRANKFURT-1-AD-3"
+      "ociAvailabilityDomain" = replace(data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain, "/.*:/","")
       "ociCompartment" = data.oci_identity_compartments.cluster_compartment.compartments[0].id
       "ociProvisionerIdentity" = "ociProvisionerIdentity"
       "ociVolumeID" = data.oci_core_volumes.cluster_fs_volume.volumes[0].id
@@ -23,7 +23,7 @@ resource "kubernetes_persistent_volume_v1" "cluster_peristent_volume" {
           match_expressions {
             key = "failure-domain.beta.kubernetes.io/zone"
             operator = "In"
-            values = ["EU-FRANKFURT-1-AD-3"]
+            values = [replace(data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain, "/.*:/","")]
           }
         }
       }
@@ -59,7 +59,7 @@ resource "kubernetes_persistent_volume_claim_v1" "cluster_persistent_volume_clai
     volume_name = kubernetes_persistent_volume_v1.cluster_peristent_volume.metadata[0].name
     resources {
       requests = {
-        storage = "5Gi"
+        storage = "50Gi"
       }
     }
   }

@@ -88,9 +88,9 @@ output "node-size" {
 output "node-shape" {
   value = oci_containerengine_node_pool.cluster_node_pool_1.node_shape
 }
-
-/*
+output "block-volumes-attachment" {
+  value = oci_core_volume_attachment.volume_attachement
+}
 output "cluster_load_balancer_public_ip" {
     value = [for ip in oci_network_load_balancer_network_load_balancer.cluster_nlb.ip_addresses : ip if ip.is_public == true]
 }
-*/
