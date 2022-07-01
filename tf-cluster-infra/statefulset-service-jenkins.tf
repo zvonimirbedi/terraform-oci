@@ -1,4 +1,4 @@
-resource "kubernetes_stateful_set" "jenkins_stateful_set" {
+resource "kubernetes_stateful_set_v1" "jenkins_stateful_set" {
   metadata {
     name = "jenkins"
     labels = {
@@ -74,7 +74,7 @@ resource "kubernetes_service_v1" "jenkins_service" {
   }
   spec {
     selector = {
-      app = kubernetes_stateful_set.jenkins_stateful_set.metadata[0].name
+      app = kubernetes_stateful_set_v1.jenkins_stateful_set.metadata[0].name
     }
     port {
       port        = 8080
