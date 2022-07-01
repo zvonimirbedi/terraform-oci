@@ -1,3 +1,20 @@
+variable "region" {
+  type        = string
+  description = "The region to provision the resources in"
+  default = "eu-frankfurt-1"
+}
+
+variable "cluster_compartment_name" {
+  type        = string
+  description = "The public IP name"
+  default = "Zvone Kubernetes Cluster"
+}
+
+variable "block_volume_name" {
+  type        = string
+  description = "Block volume name"
+}
+
 variable "provider_kubernetes_config_path" {
   type        = string
   description = "Local file path to kubernetes config file"

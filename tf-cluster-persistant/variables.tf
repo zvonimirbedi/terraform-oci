@@ -10,14 +10,30 @@ variable "public_ip_name" {
   default = "Zvone Public IP test"
 }
 
-variable "compartment_name" {
+variable "root_compartment_ocid" {
+  type        = string
+  description = "The compartment to provision the resources in"
+}
+
+variable "cluster_compartment_name" {
   type        = string
   description = "The public IP name"
   default = "Zvone Kubernetes Cluster"
 }
 
-variable "compartment_description" {
+variable "cluster_compartment_description" {
   type        = string
   description = "The public IP name"
   default = "Zvone Compartment for Terraform resources"
 }
+
+variable "block_volume_name" {
+  type        = string
+  description = "Block volume name"
+}
+
+variable "block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
+}
+

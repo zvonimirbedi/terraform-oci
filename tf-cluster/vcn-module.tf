@@ -4,7 +4,7 @@ module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
   version = "3.1.0"
   # Required
-  compartment_id = var.compartment_ocid
+  compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
   region = var.region
   vcn_name = var.vcn_name
   vcn_dns_label = "vcn"

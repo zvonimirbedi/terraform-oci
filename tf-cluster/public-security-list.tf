@@ -3,7 +3,7 @@
 resource "oci_core_security_list" "cluster_public_security_list" {
 
   # Required
-  compartment_id = var.compartment_ocid
+  compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
   vcn_id         = module.vcn.vcn_id
 
   # Optional
@@ -21,8 +21,8 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     destination_type = "CIDR_BLOCK"
     protocol         = "6"
     tcp_options {
-      min = 30080
-      max = 30080
+      min = var.cluster_node_http_port
+      max = var.cluster_node_http_port
     }
   }
   egress_security_rules {
@@ -31,8 +31,8 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     destination_type = "CIDR_BLOCK"
     protocol         = "6"
     tcp_options {
-      min = 30443
-      max = 30443
+      min = var.cluster_node_https_port
+      max = var.cluster_node_https_port
     }
   }  
   egress_security_rules {
@@ -41,8 +41,8 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     destination_type = "CIDR_BLOCK"
     protocol         = "6"
     tcp_options {
-      min = 10256
-      max = 10256
+      min = var.cluster_health_port
+      max = var.cluster_health_port
     }
   }
   ingress_security_rules {
@@ -51,8 +51,8 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     source_type = "CIDR_BLOCK"
     stateless   = false
     tcp_options {
-      max = 80
-      min = 80
+      max = var.http_port
+      min = var.http_port
     }
   }
   ingress_security_rules {
@@ -61,8 +61,8 @@ resource "oci_core_security_list" "cluster_public_security_list" {
     source_type = "CIDR_BLOCK"
     stateless   = false
     tcp_options {
-      max = 443
-      min = 443
+      max = var.https_port
+      min = var.https_port
     }
   }
   ingress_security_rules {

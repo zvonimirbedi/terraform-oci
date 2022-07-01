@@ -46,7 +46,7 @@ resource "kubernetes_service_v1" "grafana_service" {
       app = kubernetes_deployment_v1.grafana_deployment.metadata[0].name
     }
     port {
-      port        = 8080
+      port        = 3000
       target_port = 3000
       protocol    = "TCP"
     }

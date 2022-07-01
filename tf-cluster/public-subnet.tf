@@ -3,7 +3,7 @@
 resource "oci_core_subnet" "cluster_public_subnet" {
 
   # Required
-  compartment_id = var.compartment_ocid
+  compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
   vcn_id         = module.vcn.vcn_id
   cidr_block     = "10.0.0.0/24"
 

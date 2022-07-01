@@ -1,13 +1,3 @@
-# Output the "list" of all availability domains.
-output "all-availability-domains-in-your-tenancy" {
-  value = data.oci_identity_availability_domains.ads.availability_domains
-}
-
-# The "name" of the availability domain to be used for the compute instance.
-output "name-of-first-availability-domain" {
-  value = data.oci_identity_availability_domains.ads.availability_domains[0].name
-}
-
 # Outputs for the vcn module
 
 output "vcn_id" {
@@ -86,6 +76,9 @@ output "node-pool-name" {
 output "node-pool-OCID" {
   value = oci_containerengine_node_pool.cluster_node_pool_1.id
 }
+output "node-pool-nodes" {
+  value = oci_containerengine_node_pool.cluster_node_pool_1.nodes
+}
 output "node-pool-kubernetes-version" {
   value = oci_containerengine_node_pool.cluster_node_pool_1.kubernetes_version
 }
@@ -96,6 +89,8 @@ output "node-shape" {
   value = oci_containerengine_node_pool.cluster_node_pool_1.node_shape
 }
 
+/*
 output "cluster_load_balancer_public_ip" {
     value = [for ip in oci_network_load_balancer_network_load_balancer.cluster_nlb.ip_addresses : ip if ip.is_public == true]
 }
+*/

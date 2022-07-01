@@ -3,37 +3,29 @@
 resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
   # Required
   cluster_id         = oci_containerengine_cluster.zvone_cluster.id
-  compartment_id     = var.compartment_ocid
-  kubernetes_version = "v1.23.4"
+  compartment_id     = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+  kubernetes_version = var.cluster_kubernetes_version
   name               = var.cluster_node_pool_1_name
   node_config_details {
     placement_configs {
-      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
+      availability_domain = data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain
       subnet_id           = oci_core_subnet.cluster_private_subnet.id
     } 
-    placement_configs{
-      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[1].name
-      subnet_id = oci_core_subnet.cluster_private_subnet.id
-    }
-    placement_configs{
-      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[2].name
-      subnet_id = oci_core_subnet.cluster_private_subnet.id
-    }
-    size = var.node_pool_1_count
+    size = var.cluster_node_pool_1_count
   }
   # https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm#vmshapes__vm-standard
   # AMD processor
-  node_shape = "VM.Standard.E4.Flex"
+  node_shape = var.cluster_node_shape
   node_shape_config {
-    memory_in_gbs = 2
-    ocpus         = 1
+    memory_in_gbs = var.cluster_node_ram
+    ocpus         = var.cluster_node_ocpus
   }
 
   # Using image Oracle-Linux-8.x-<date>
   # Find image OCID for your region
   # https://docs.oracle.com/en-us/iaas/images/
   node_source_details {
-    image_id    = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaagnjarpaspryq7flekez4fxztbnko3y3i4k43gza4xsfl6m4xnn4q"
+    image_id    = var.cluster_node_source_image
     source_type = "image"
   }
 
@@ -41,5 +33,16 @@ resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
   initial_node_labels {
     key   = "name"
     value = var.cluster_name
+  }
+
+  # setup kube confing
+  # enable agent
+  provisioner "local-exec" {
+    # generate kube config file for new cluster
+    command = <<-EOT
+          rm -r /home/botuser/.kube/config
+          oci ce cluster create-kubeconfig --cluster-id ${oci_containerengine_cluster.zvone_cluster.id} --file $HOME/.kube/config --region ${var.region} --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+          # yes | oci compute instance update --instance-id ${oci_containerengine_node_pool.cluster_node_pool_1.nodes[0].id} --agent-config "{\"is-agent-disabled\": false,\"plugins-config\": [{\"name\": \"Block Volume Management\", \"desiredState\": \"ENABLED\"}]}"
+    EOT
   }
 }

@@ -2,8 +2,8 @@
 
 resource "oci_containerengine_cluster" "zvone_cluster" {
   # Required
-  compartment_id     = var.compartment_ocid
-  kubernetes_version = "v1.23.4"
+  compartment_id     = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+  kubernetes_version = var.cluster_kubernetes_version
   name               = var.cluster_name
   vcn_id             = module.vcn.vcn_id
   endpoint_config {

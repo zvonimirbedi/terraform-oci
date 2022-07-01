@@ -22,7 +22,7 @@ resource "kubernetes_stateful_set" "jenkins_stateful_set" {
       }
       spec {
         service_account_name = kubernetes_service_account_v1.admin_service_account.metadata[0].name
-        /*
+        
         init_container {
           name              = "init-chown-data"
           image             = "busybox:latest"
@@ -35,7 +35,6 @@ resource "kubernetes_stateful_set" "jenkins_stateful_set" {
             sub_path   = ""
           }
         }
-        */
 
         container {
           image = "jenkins/jenkins:lts"
@@ -43,36 +42,25 @@ resource "kubernetes_stateful_set" "jenkins_stateful_set" {
           port {
             container_port = 8080
             name = "jenkins"
-          }
-          /*
+          } 
+
+
           volume_mount {
             name       = "jenkins-home"
             mount_path = "/var/jenkins_home"
-            sub_path   = ""
+            sub_path   = "jenkins-home/"
           }
-          */
+
         }
-      }
-    }
-
-    /*
-    volume_claim_template {
-      metadata {
-        name = "jenkins-home"
-      }
-
-      spec {
-        access_modes       = ["ReadWriteOnce"]
-        storage_class_name = "oci"
-
-        resources {
-          requests = {
-            storage = "1Gi"
+        
+        volume {
+          name = "jenkins-home"
+          persistent_volume_claim {
+            claim_name = "cluster-persistent-volume-claim"
           }
         }
       }
     }
-    */
   }
   depends_on = [
     kubernetes_namespace.namespaces
