@@ -9,3 +9,7 @@ Terraform OCI repo
 
 
 kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+
+
+# force delete ns
+kubectl get namespace "tools" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/tools/finalize -f -

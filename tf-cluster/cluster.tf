@@ -26,3 +26,9 @@ resource "oci_containerengine_cluster" "zvone_cluster" {
     service_lb_subnet_ids = [oci_core_subnet.cluster_public_subnet.id]
   }
 }
+
+# add delay on destroy because of errors on destroy finish
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [oci_containerengine_cluster.zvone_cluster]
+  destroy_duration = "30s"
+}
