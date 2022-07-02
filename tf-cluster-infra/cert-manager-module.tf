@@ -16,3 +16,16 @@ module "cert_manager" {
     } 
   }
 }
+resource "null_resource" "cert_secrets_and_isusers" {
+  depends_on = [module.cert_manager]
+  # add certificates and issuers
+  provisioner "local-exec" {
+    # generate kube config file for new cluster
+    interpreter = ["/bin/bash", "-c"]
+    command = <<-EOT
+        kubectl --validate=false apply -f <(awk '!/^ *(resourceVersion|uid): [^ ]+$/' ../data/backup_secret.yaml)
+        # kubectl --validate=false apply -f <(awk '!/^ *(resourceVersion|uid): [^ ]+$/' ../data/backup_else.yaml)
+        kubectl apply -f kube-issuer/
+    EOT
+  }
+}
