@@ -7,8 +7,6 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
       "nginx.ingress.kubernetes.io/auth-type" = "basic"
       "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
       "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
-
-      "cert-manager.io/cluster-issuer" = var.clusterissuer_grafana
       "nginx.ingress.kubernetes.io/rewrite-target" = "/"
     }
   }
@@ -46,8 +44,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
       }
     }
     tls {
-      hosts = [var.grafana_url, join(".", ["www", var.grafana_url])]
-      secret_name = var.clusterissuer_grafana
+      secret_name = var.clusterissuer_zvonimirbedi
     }
   }
 }

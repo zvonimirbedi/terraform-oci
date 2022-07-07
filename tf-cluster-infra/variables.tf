@@ -41,6 +41,16 @@ variable "docker_registry_password" {
   description = "Docker registry password"
 }
 
+variable "namecheap_username" {
+  type        = string
+  description = "Namecheap username"
+}
+
+variable "namecheap_key" {
+  type        = string
+  description = "Namecheap key"
+}
+
 variable "nginx_auth" {
   type        = string
   description = "Ingress Nginx Authentication username:password"
@@ -56,12 +66,7 @@ variable "grafana_url" {
   description = "DNS for Grafana"
 }
 
-variable "clusterissuer_jenkins" {
+variable "clusterissuer_zvonimirbedi" {
   type        = string
-  description = "Issuer cert-manager for Jenkins"
-}
-
-variable "clusterissuer_grafana" {
-  type        = string
-  description = "Issuer cert-manager for Grafana"
+  description = "Issuer cert-manager for zvonimirbedi.com"
 }

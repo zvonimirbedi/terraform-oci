@@ -7,9 +7,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       "nginx.ingress.kubernetes.io/auth-type" = "basic"
       "nginx.ingress.kubernetes.io/auth-secret" = kubernetes_secret_v1.secret_nginx.metadata.0.name
       "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - zvonimirbedi"
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
-      "cert-manager.io/cluster-issuer" = var.clusterissuer_jenkins
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/"
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/"      
     }
   }
   spec {
@@ -46,8 +44,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
       }
     }
     tls {
-      hosts = [var.jenkins_url, join(".", ["www", var.jenkins_url])]
-      secret_name = var.clusterissuer_jenkins
+      secret_name = var.clusterissuer_zvonimirbedi
     }
   }
 }

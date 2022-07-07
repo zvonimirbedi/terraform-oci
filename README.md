@@ -13,3 +13,5 @@ kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/r
 
 # force delete ns
 kubectl get namespace "tools" -o json   | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/"   | kubectl replace --raw /api/v1/namespaces/tools/finalize -f -
+# or
+kubectl delete apiservice v1beta1.webhook.cert-manager.io
