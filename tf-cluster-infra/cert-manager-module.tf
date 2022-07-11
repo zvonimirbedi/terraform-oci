@@ -38,9 +38,10 @@ resource "helm_release" "cert_manager" {
 resource "helm_release" "cert_manager_webhook_namecheap" {
   depends_on = [helm_release.cert_manager]
   name       = "cert-manager-webhook-namecheap"
+  repository = "http://zvonimirbedi.github.io/cert-manager-webhook-namecheap/"
+  chart      = "cert-manager-webhook-namecheap"
+  version    = "0.1.2"
   namespace  = "tools"
-
-  chart      = "../helm_release/cert-manager-webhook-namecheap/charts/cert-manager-webhook-namecheap"
 }
 
 
