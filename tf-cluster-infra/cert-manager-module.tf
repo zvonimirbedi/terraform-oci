@@ -1,4 +1,7 @@
 resource "kubernetes_secret" "namecheap_credentials" {
+  depends_on = [
+    kubernetes_namespace.namespaces
+  ]
   metadata {
     name = "namecheap-credentials"
     namespace  = "tools"
