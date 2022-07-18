@@ -29,7 +29,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
       }
     }
     rule {
-      host = join(".", ["www", var.grafana_url])
+      host = "www.${var.grafana_url}"
       http {
         path {
           backend {

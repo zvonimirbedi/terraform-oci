@@ -13,9 +13,16 @@ data "oci_core_public_ips" "public_ip" {
     lifetime = "RESERVED"
 }
 
-data "oci_core_volumes" "cluster_fs_volume" {
+data "oci_core_volumes" "cluster_tools_volume" {
     #Required
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    display_name = var.block_volume_name
+    display_name = var.tools_block_volume_name
+    state = "Available"
+}
+
+data "oci_core_volumes" "cluster_database_volume" {
+    #Required
+    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+    display_name = var.database_block_volume_name
     state = "Available"
 }

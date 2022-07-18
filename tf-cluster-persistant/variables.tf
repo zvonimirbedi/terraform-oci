@@ -27,13 +27,23 @@ variable "cluster_compartment_description" {
   default = "Zvone Compartment for Terraform resources"
 }
 
-variable "block_volume_name" {
+variable "tools_block_volume_name" {
   type        = string
-  description = "Block volume name"
+  description = "Block volume name Tools"
 }
 
-variable "block_volume_size_gb" {
+variable "tools_block_volume_size_gb" {
   type        = string
-  description = "Block volume size in GB"
+  description = "Block volume size in GB for tools"
+}
+
+variable "database_block_volume_name" {
+  type        = string
+  description = "Block volume name database"
+}
+
+variable "database_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB for database"
 }
 

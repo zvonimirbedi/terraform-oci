@@ -1,21 +1,21 @@
-resource "kubernetes_persistent_volume_v1" "cluster_peristent_volume" {
+resource "kubernetes_persistent_volume_v1" "cluster_tools_peristent_volume" {
   metadata {
-    name = data.oci_core_volumes.cluster_fs_volume.volumes[0].id
+    name = data.oci_core_volumes.cluster_tools_volume.volumes[0].id
     labels = {
       "failure-domain.beta.kubernetes.io/region" = var.region
-      "failure-domain.beta.kubernetes.io/zone" = replace(data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain, "/.*:/","")
+      "failure-domain.beta.kubernetes.io/zone" = replace(data.oci_core_volumes.cluster_tools_volume.volumes[0].availability_domain, "/.*:/","")
     }
     annotations = {
-      "ociAvailabilityDomain" = replace(data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain, "/.*:/","")
+      "ociAvailabilityDomain" = replace(data.oci_core_volumes.cluster_tools_volume.volumes[0].availability_domain, "/.*:/","")
       "ociCompartment" = data.oci_identity_compartments.cluster_compartment.compartments[0].id
       "ociProvisionerIdentity" = "ociProvisionerIdentity"
-      "ociVolumeID" = data.oci_core_volumes.cluster_fs_volume.volumes[0].id
+      "ociVolumeID" = data.oci_core_volumes.cluster_tools_volume.volumes[0].id
       "pv.kubernetes.io/provisioned-by" = "oracle.com/oci"
     }
   }
   spec {
     capacity = {
-      storage = "50Gi"
+      storage = "${var.tools_block_volume_size_gb}Gi"
     }
     node_affinity {
       required {
@@ -23,7 +23,7 @@ resource "kubernetes_persistent_volume_v1" "cluster_peristent_volume" {
           match_expressions {
             key = "failure-domain.beta.kubernetes.io/zone"
             operator = "In"
-            values = [replace(data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain, "/.*:/","")]
+            values = [replace(data.oci_core_volumes.cluster_tools_volume.volumes[0].availability_domain, "/.*:/","")]
           }
         }
       }
@@ -42,9 +42,9 @@ resource "kubernetes_persistent_volume_v1" "cluster_peristent_volume" {
 }
 
 
-resource "kubernetes_persistent_volume_claim_v1" "cluster_persistent_volume_claim" {
+resource "kubernetes_persistent_volume_claim_v1" "cluster_tools_persistent_volume_claim" {
   metadata {
-    name = "cluster-persistent-volume-claim"
+    name = var.tools_block_volume_name
     namespace = "tools"
     annotations = {
       "pv.kubernetes.io/bind-completed" = "yes"
@@ -56,10 +56,10 @@ resource "kubernetes_persistent_volume_claim_v1" "cluster_persistent_volume_clai
   spec {
     storage_class_name = "oci"
     access_modes = ["ReadWriteOnce"]
-    volume_name = kubernetes_persistent_volume_v1.cluster_peristent_volume.metadata[0].name
+    volume_name = kubernetes_persistent_volume_v1.cluster_tools_peristent_volume.metadata[0].name
     resources {
       requests = {
-        storage = "50Gi"
+        storage = "${var.tools_block_volume_size_gb}Gi"
       }
     }
   }

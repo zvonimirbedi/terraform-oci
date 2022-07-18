@@ -56,7 +56,7 @@ resource "kubernetes_stateful_set_v1" "jenkins_stateful_set" {
         volume {
           name = "jenkins-home"
           persistent_volume_claim {
-            claim_name = "cluster-persistent-volume-claim"
+            claim_name = var.tools_block_volume_name
           }
         }
       }

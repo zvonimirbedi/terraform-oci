@@ -10,9 +10,24 @@ variable "cluster_compartment_name" {
   default = "Zvone Kubernetes Cluster"
 }
 
-variable "block_volume_name" {
+variable "tools_block_volume_name" {
   type        = string
-  description = "Block volume name"
+  description = "Block volume name tools"
+}
+
+variable "tools_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB for tools"
+}
+
+variable "database_block_volume_name" {
+  type        = string
+  description = "Block volume name database"
+}
+
+variable "database_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB for database"
 }
 
 variable "provider_kubernetes_config_path" {
