@@ -8,7 +8,7 @@ resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
   name               = var.cluster_node_pool_1_name
   node_config_details {
     placement_configs {
-      availability_domain = data.oci_core_volumes.cluster_fs_volume.volumes[0].availability_domain
+      availability_domain = data.oci_core_volumes.cluster_tools_volume.volumes[0].availability_domain
       subnet_id           = oci_core_subnet.cluster_private_subnet.id
     } 
     size = var.cluster_node_pool_1_count

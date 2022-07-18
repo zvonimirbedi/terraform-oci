@@ -102,7 +102,12 @@ variable "cluster_node_https_port" {
   description = "Kubernetes cluster node https port"
 }
 
-variable "block_volume_name" {
+variable "tools_block_volume_name" {
   type        = string
-  description = "Block volume name"
+  description = "Block volume name Tools"
+}
+
+variable "database_block_volume_name" {
+  type        = string
+  description = "Block volume name database"
 }
