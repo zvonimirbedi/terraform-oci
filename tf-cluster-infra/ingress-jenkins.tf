@@ -19,9 +19,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
+              name = "jenkins"
               port {
-                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
+                number = "80"
               }
             }
           }
@@ -34,9 +34,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.jenkins_service.metadata.0.name
+              name = "jenkins"
               port {
-                number = kubernetes_service_v1.jenkins_service.spec[0].port[0].target_port
+                number = "443"
               }
             }
           }

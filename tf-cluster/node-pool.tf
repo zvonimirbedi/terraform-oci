@@ -1,6 +1,7 @@
 # Source from https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/containerengine_node_pool
 
 resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
+  # depends_on = [oci_core_subnet.cluster_private_subnet, oci_containerengine_cluster.zvone_cluster]
   # Required
   cluster_id         = oci_containerengine_cluster.zvone_cluster.id
   compartment_id     = data.oci_identity_compartments.cluster_compartment.compartments[0].id

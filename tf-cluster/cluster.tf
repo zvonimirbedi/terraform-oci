@@ -1,6 +1,7 @@
 # Source from https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/containerengine_cluster
 
 resource "oci_containerengine_cluster" "zvone_cluster" {
+  # depends_on = [oci_core_subnet.cluster_public_subnet, module.vcn]
   # Required
   compartment_id     = data.oci_identity_compartments.cluster_compartment.compartments[0].id
   kubernetes_version = var.cluster_kubernetes_version
@@ -25,10 +26,4 @@ resource "oci_containerengine_cluster" "zvone_cluster" {
     }
     service_lb_subnet_ids = [oci_core_subnet.cluster_public_subnet.id]
   }
-}
-
-# add delay on destroy because of errors on destroy finish
-resource "time_sleep" "wait_30_seconds" {
-  depends_on = [oci_containerengine_cluster.zvone_cluster]
-  destroy_duration = "30s"
 }

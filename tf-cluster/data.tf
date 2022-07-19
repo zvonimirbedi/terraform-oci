@@ -6,7 +6,7 @@ data "oci_identity_compartments" "cluster_compartment" {
     name = var.cluster_compartment_name
 }
 
-data "oci_core_public_ips" "public_ip" {
+data "oci_core_public_ips" "cluster_public_ips" {
     #Required
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
     scope = "REGION"

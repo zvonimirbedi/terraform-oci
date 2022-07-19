@@ -15,6 +15,12 @@ variable "root_compartment_ocid" {
   description = "The compartment to provision the resources in"
 }
 
+variable "public_ip_name" {
+  type        = string
+  description = "The public IP name"
+  default = "Zvone Public IP test"
+}
+
 variable "vcn_name" {
   type        = string
   description = "VCN Name description"

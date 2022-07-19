@@ -18,7 +18,6 @@ output "id-for-for-route-table-that-includes-the-nat-gateway" {
 }
 
 # Outputs for private security list
-
 output "private-security-list-name" {
   value = oci_core_security_list.cluster_private_security_list.display_name
 }

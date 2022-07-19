@@ -7,8 +7,8 @@ resource "oci_network_load_balancer_network_load_balancer" "cluster_nlb" {
   is_preserve_source_destination = false
   reserved_ips {
         #Optional
-        id = data.oci_core_public_ips.public_ip.public_ips[0].id
-    }
+        id = element([for node in data.oci_core_public_ips.cluster_public_ips.public_ips : node if node.display_name == var.public_ip_name], 0).id
+  }
 }
 
 resource "oci_network_load_balancer_backend_set" "cluster_nlb_backend_set_80" {
