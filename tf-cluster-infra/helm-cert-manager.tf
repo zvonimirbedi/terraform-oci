@@ -1,7 +1,31 @@
+# https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/README.template.md
+resource "helm_release" "cert_manager" {
+  depends_on = [kubernetes_namespace.namespaces]
+  provisioner "local-exec" {
+    command = "kubectl delete Issuers,ClusterIssuers,Certificates,CertificateRequests,Orders,Challenges --all-namespaces --all"
+    when    = destroy
+  }
+  name       = "cert-manager"
+  namespace  = "tools"
+  chart            = "cert-manager"
+  repository       = "https://charts.bitnami.com"
+
+  set {
+    name  = "installCRDs"
+    value = "true"
+  }
+  set {
+    name  = "metrics.enabled"
+    value = "false"
+  }
+  set {
+    name  = "webhook.replicaCount"
+    value = "1"
+  }
+}
+
 resource "kubernetes_secret" "namecheap_credentials" {
-  depends_on = [
-    kubernetes_namespace.namespaces
-  ]
+  depends_on = [kubernetes_namespace.namespaces]
   metadata {
     name = "namecheap-credentials"
     namespace  = "tools"
@@ -15,38 +39,15 @@ resource "kubernetes_secret" "namecheap_credentials" {
   type = "Opaque" 
 }
 
-resource "helm_release" "cert_manager" {
-  depends_on = [kubernetes_secret.namecheap_credentials]
-  provisioner "local-exec" {
-    command = "kubectl delete Issuers,ClusterIssuers,Certificates,CertificateRequests,Orders,Challenges --all-namespaces --all"
-    when    = destroy
-  }
-  name       = "cert-manager"
-  namespace  = "tools"
-  chart            = "cert-manager"
-  repository       = "https://charts.jetstack.io"
-
-  set {
-    name  = "installCRDs"
-    value = "true"
-  }
-
-  set {
-    name  = "prometheus.enabled"
-    value = "false"
-  }
-}
-
 # https://github.com/Extrality/cert-manager-webhook-namecheap
 resource "helm_release" "cert_manager_webhook_namecheap" {
-  depends_on = [helm_release.cert_manager]
+  depends_on = [helm_release.cert_manager, kubernetes_secret.namecheap_credentials]
   name       = "cert-manager-webhook-namecheap"
   repository = "http://zvonimirbedi.github.io/cert-manager-webhook-namecheap/"
   chart      = "cert-manager-webhook-namecheap"
   version    = "0.1.2"
   namespace  = "tools"
 }
-
 
 resource "kubernetes_cluster_role_binding_v1" "cert_manager_role_binding" {
   depends_on = [helm_release.cert_manager]
@@ -60,7 +61,7 @@ resource "kubernetes_cluster_role_binding_v1" "cert_manager_role_binding" {
   }
   subject {
     kind      = "ServiceAccount"
-    name      = "cert-manager"
+    name      = "cert-manager-controller"
     namespace = "tools"
   }
 }

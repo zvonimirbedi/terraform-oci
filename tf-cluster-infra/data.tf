@@ -6,13 +6,6 @@ data "oci_identity_compartments" "cluster_compartment" {
     name = var.cluster_compartment_name
 }
 
-data "oci_core_public_ips" "public_ip" {
-    #Required
-    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    scope = "REGION"
-    lifetime = "RESERVED"
-}
-
 data "oci_core_volumes" "cluster_tools_volume" {
     #Required
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id

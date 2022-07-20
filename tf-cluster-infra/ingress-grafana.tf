@@ -11,7 +11,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
     }
   }
   spec {
-    ingress_class_name = kubernetes_ingress_class_v1.ingress_class.metadata.0.name
+    ingress_class_name = "nginx"
 
     rule {
       host = var.grafana_url
@@ -19,9 +19,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.grafana_service.metadata.0.name
+              name = helm_release.grafana.name
               port {
-                number = kubernetes_service_v1.grafana_service.spec[0].port[0].target_port
+                number = "80"
               }
             }
           }
@@ -34,9 +34,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
         path {
           backend {
             service {
-              name = kubernetes_service_v1.grafana_service.metadata.0.name
+              name = helm_release.grafana.name
               port {
-                number = kubernetes_service_v1.grafana_service.spec[0].port[0].target_port
+                number = "443"
               }
             }
           }

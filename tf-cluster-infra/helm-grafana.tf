@@ -1,17 +1,17 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/mariadb/#installing-the-chart
-resource "helm_release" "jenkins" {
+resource "helm_release" "grafana" {
   depends_on = [kubernetes_namespace.namespaces]
-  name       = "jenkins"
+  name       = "grafana"
   namespace  = "tools"
-  chart            = "jenkins"
+  chart            = "grafana"
   repository       = "https://charts.bitnami.com"
 
   set {
-    name  = "jenkinsUser"
+    name  = "admin.user"
     value = "root"
   }
   set {
-    name  = "jenkinsPassword"
+    name  = "admin.password"
     value = "password"
   }
   set {
@@ -29,6 +29,10 @@ resource "helm_release" "jenkins" {
   set {
     name  = "persistence.existingClaim"
     value = var.tools_block_volume_name
+  }
+  set {
+    name  = "persistence.subPath"
+    value = "grafana-home/"
   }
   set {
     name  = "service.type"

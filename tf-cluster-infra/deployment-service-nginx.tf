@@ -83,6 +83,7 @@ resource "kubernetes_service_v1" "ingress_service" {
   }
 }
 
+/*
 resource "kubernetes_ingress_class_v1" "ingress_class" {
   metadata {
     name = "nginx"
@@ -92,3 +93,4 @@ resource "kubernetes_ingress_class_v1" "ingress_class" {
     controller = "k8s.io/ingress-nginx"
   }
 }
+*/

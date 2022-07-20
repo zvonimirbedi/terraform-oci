@@ -11,7 +11,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
     }
   }
   spec {
-    ingress_class_name = kubernetes_ingress_class_v1.ingress_class.metadata.0.name
+    ingress_class_name = "nginx"
 
     rule {
       host = var.jenkins_url
@@ -19,7 +19,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
         path {
           backend {
             service {
-              name = "jenkins"
+              name = helm_release.jenkins.name
               port {
                 number = "80"
               }
@@ -34,7 +34,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
         path {
           backend {
             service {
-              name = "jenkins"
+              name = helm_release.jenkins.name
               port {
                 number = "443"
               }

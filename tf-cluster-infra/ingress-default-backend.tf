@@ -11,7 +11,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_default_backend" {
     }
   }
   spec {
-    ingress_class_name = kubernetes_ingress_class_v1.ingress_class.metadata.0.name
+    ingress_class_name = "nginx"
 
     default_backend {
       service {
