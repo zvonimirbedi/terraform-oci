@@ -21,7 +21,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
             service {
               name = helm_release.grafana.name
               port {
-                number = "80"
+                number = "3000"
               }
             }
           }
@@ -36,7 +36,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_grafana" {
             service {
               name = helm_release.grafana.name
               port {
-                number = "443"
+                number = "3000"
               }
             }
           }

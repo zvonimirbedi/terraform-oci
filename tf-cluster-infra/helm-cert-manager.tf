@@ -1,6 +1,6 @@
 # https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/README.template.md
 resource "helm_release" "cert_manager" {
-  depends_on = [kubernetes_namespace.namespaces]
+  depends_on = [kubernetes_namespace.namespaces, helm_release.nginx_ingress_controller]
   provisioner "local-exec" {
     command = "kubectl delete Issuers,ClusterIssuers,Certificates,CertificateRequests,Orders,Challenges --all-namespaces --all"
     when    = destroy

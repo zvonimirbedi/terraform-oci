@@ -21,7 +21,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
             service {
               name = helm_release.jenkins.name
               port {
-                number = "80"
+                number = "8080"
               }
             }
           }
@@ -36,7 +36,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_jenkins" {
             service {
               name = helm_release.jenkins.name
               port {
-                number = "443"
+                number = "8443"
               }
             }
           }
