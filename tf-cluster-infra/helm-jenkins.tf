@@ -1,4 +1,4 @@
-# https://github.com/bitnami/charts/tree/master/bitnami/mariadb/#installing-the-chart
+# https://github.com/bitnami/charts/tree/master/bitnami/jenkins
 resource "helm_release" "jenkins" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "jenkins"

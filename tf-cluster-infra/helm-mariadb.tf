@@ -31,23 +31,23 @@ resource "helm_release" "mariadb" {
     value = "wordpress"
   }
   set {
-    name  = "primary.persistence.subPath"
-    value = "mariadb-home/"
-  }
-  set {
     name  = "primary.persistence.enabled"
     value = "true"
   }
   set {
-    name  = "secondary.persistence.enabled"
-    value = "false"
+    name  = "primary.persistence.subPath"
+    value = "mariadb-primary-home/"
   }
   set {
     name  = "primary.persistence.existingClaim"
     value = var.database_block_volume_name
   }
   set {
+    name  = "secondary.persistence.enabled"
+    value = "false"
+  }
+  set {
     name  = "secondary.replicaCount"
-    value = 1
+    value = "0"
   }
 }

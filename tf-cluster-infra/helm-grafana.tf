@@ -1,4 +1,4 @@
-# https://github.com/bitnami/charts/tree/master/bitnami/mariadb/#installing-the-chart
+# https://github.com/bitnami/charts/tree/master/bitnami/grafana
 resource "helm_release" "grafana" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "grafana"
