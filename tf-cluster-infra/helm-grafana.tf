@@ -15,10 +15,6 @@ resource "helm_release" "grafana" {
     value = "password"
   }
   set {
-    name  = "jenkinsHome"
-    value = "/bitnami/jenkins/home"
-  }
-  set {
     name  = "ingress.enabled"
     value = "false"
   }
