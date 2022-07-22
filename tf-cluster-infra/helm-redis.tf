@@ -16,7 +16,7 @@ resource "helm_release" "redis" {
   }
   set {
     name  = "auth.password"
-    value = "password"
+    value = var.password_redis
   }
   set {
     name  = "master.count"

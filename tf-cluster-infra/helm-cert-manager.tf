@@ -6,7 +6,7 @@ resource "helm_release" "cert_manager" {
     when    = destroy
   }
   name       = "cert-manager"
-  namespace  = "tools"
+  namespace  = "networks"
   chart            = "cert-manager"
   repository       = "https://charts.bitnami.com"
 
@@ -28,7 +28,7 @@ resource "kubernetes_secret" "namecheap_credentials" {
   depends_on = [kubernetes_namespace.namespaces]
   metadata {
     name = "namecheap-credentials"
-    namespace  = "tools"
+    namespace  = "networks"
   }
 
   data = {
@@ -46,7 +46,7 @@ resource "helm_release" "cert_manager_webhook_namecheap" {
   repository = "http://zvonimirbedi.github.io/cert-manager-webhook-namecheap/"
   chart      = "cert-manager-webhook-namecheap"
   version    = "0.1.2"
-  namespace  = "tools"
+  namespace  = "networks"
 }
 
 resource "kubernetes_cluster_role_binding_v1" "cert_manager_role_binding" {
@@ -62,7 +62,7 @@ resource "kubernetes_cluster_role_binding_v1" "cert_manager_role_binding" {
   subject {
     kind      = "ServiceAccount"
     name      = "cert-manager-controller"
-    namespace = "tools"
+    namespace = "networks"
   }
 }
 

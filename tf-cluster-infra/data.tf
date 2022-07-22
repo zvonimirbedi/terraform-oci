@@ -19,3 +19,10 @@ data "oci_core_volumes" "cluster_database_volume" {
     display_name = var.database_block_volume_name
     state = "Available"
 }
+
+data "oci_core_volumes" "cluster_wordpress_volume" {
+    #Required
+    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+    display_name = var.wordpress_block_volume_name
+    state = "Available"
+}

@@ -29,21 +29,30 @@ variable "cluster_compartment_description" {
 
 variable "tools_block_volume_name" {
   type        = string
-  description = "Block volume name Tools"
+  description = "Block volume name "
 }
 
 variable "tools_block_volume_size_gb" {
   type        = string
-  description = "Block volume size in GB for tools"
+  description = "Block volume size in GB"
 }
 
 variable "database_block_volume_name" {
   type        = string
-  description = "Block volume name database"
+  description = "Block volume name"
 }
 
 variable "database_block_volume_size_gb" {
   type        = string
-  description = "Block volume size in GB for database"
+  description = "Block volume size in GB"
+}
+variable "wordpress_block_volume_name" {
+  type        = string
+  description = "Block volume name "
+}
+
+variable "wordpress_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
 }
 

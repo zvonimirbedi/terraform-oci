@@ -117,3 +117,8 @@ variable "database_block_volume_name" {
   type        = string
   description = "Block volume name database"
 }
+
+variable "wordpress_block_volume_name" {
+  type        = string
+  description = "Block volume name"
+}

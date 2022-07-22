@@ -2,7 +2,7 @@
 resource "helm_release" "kube-prometheus" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "kube-prometheus"
-  namespace  = "tools"
+  namespace  = "networks"
   chart            = "kube-prometheus"
   repository       = "https://charts.bitnami.com"
 

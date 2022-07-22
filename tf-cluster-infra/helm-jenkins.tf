@@ -8,11 +8,11 @@ resource "helm_release" "jenkins" {
 
   set {
     name  = "jenkinsUser"
-    value = "root"
+    value = var.username_jenkins
   }
   set {
     name  = "jenkinsPassword"
-    value = "password"
+    value = var.password_jenkins
   }
   set {
     name  = "jenkinsHome"

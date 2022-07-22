@@ -12,7 +12,7 @@ resource "helm_release" "mariadb" {
   }
   set {
     name  = "auth.rootPassword"
-    value = "password"
+    value = var.password_mariadb
   }
   set {
     name  = "auth.replicationUser"
@@ -20,7 +20,7 @@ resource "helm_release" "mariadb" {
   }
   set {
     name  = "auth.replicationPassword"
-    value = "password"
+    value = var.password_mariadb
   }
   set {
     name  = "auth.forcePassword"
@@ -28,7 +28,7 @@ resource "helm_release" "mariadb" {
   }
   set {
     name  = "auth.database"
-    value = "wordpress"
+    value = var.databasename_mariadb
   }
   set {
     name  = "primary.persistence.enabled"

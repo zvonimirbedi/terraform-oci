@@ -30,6 +30,16 @@ variable "database_block_volume_size_gb" {
   description = "Block volume size in GB for database"
 }
 
+variable "wordpress_block_volume_name" {
+  type        = string
+  description = "Block volume name"
+}
+
+variable "wordpress_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
+}
+
 variable "provider_kubernetes_config_path" {
   type        = string
   description = "Local file path to kubernetes config file"
@@ -84,4 +94,45 @@ variable "grafana_url" {
 variable "clusterissuer_zvonimirbedi" {
   type        = string
   description = "Issuer cert-manager for zvonimirbedi.com"
+}
+
+variable "username_jenkins" {
+  type        = string
+  description = "Username credentials"
+}
+variable "password_jenkins" {
+  type        = string
+  description = "Password credentials"
+}
+variable "username_grafana" {
+  type        = string
+  description = "Username credentials"
+}
+variable "password_grafana" {
+  type        = string
+  description = "Password credentials"
+}
+variable "username_mariadb" {
+  type        = string
+  description = "Username credentials"
+}
+variable "databasename_mariadb" {
+  type        = string
+  description = "Database name"
+}
+variable "password_mariadb" {
+  type        = string
+  description = "Password credentials"
+}
+variable "username_wordpress" {
+  type        = string
+  description = "Username credentials"
+}
+variable "password_wordpress" {
+  type        = string
+  description = "Password credentials"
+}
+variable "password_redis" {
+  type        = string
+  description = "Password credentials"
 }
