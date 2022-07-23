@@ -85,4 +85,8 @@ resource "helm_release" "wordpress" {
     name  = "externalDatabase.database"
     value = var.databasename_mariadb
   }
+  set {
+    name  = "service.type"
+    value = "ClusterIP"
+  }
 }
