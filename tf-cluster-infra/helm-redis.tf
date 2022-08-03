@@ -3,8 +3,9 @@ resource "helm_release" "redis" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "redis"
   namespace  = "databases"
-  chart            = "redis"
-  repository       = "https://charts.bitnami.com"
+  chart      = "redis"
+  version    = "17.0.7"
+  repository = "https://charts.bitnami.com"
 
   set {
     name  = "architecture"

@@ -3,8 +3,9 @@ resource "helm_release" "mariadb" {
   depends_on = [kubernetes_secret.namecheap_credentials]
   name       = "mariadb"
   namespace  = "databases"
-  chart            = "mariadb"
-  repository       = "https://charts.bitnami.com"
+  chart      = "mariadb"
+  version    = "11.1.4"
+  repository = "https://charts.bitnami.com"
 
   set {
     name  = "architecture"

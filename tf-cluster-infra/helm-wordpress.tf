@@ -3,7 +3,8 @@ resource "helm_release" "wordpress" {
   depends_on = [kubernetes_namespace.namespaces, helm_release.mariadb]
   name       = "wordpress"
   namespace  = "apps"
-  chart            = "wordpress"
+  chart      = "wordpress"
+  version    = "15.0.13"
   repository       = "https://charts.bitnami.com"
 
   set {

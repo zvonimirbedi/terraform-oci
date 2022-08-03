@@ -3,8 +3,9 @@ resource "helm_release" "kube-prometheus" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "kube-prometheus"
   namespace  = "networks"
-  chart            = "kube-prometheus"
-  repository       = "https://charts.bitnami.com"
+  chart      = "kube-prometheus"
+  version    = "8.0.12"
+  repository = "https://charts.bitnami.com"
 
   set {
     name  = "blackboxExporter.enabled"

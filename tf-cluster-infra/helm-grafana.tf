@@ -3,7 +3,8 @@ resource "helm_release" "grafana" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "grafana"
   namespace  = "tools"
-  chart            = "grafana"
+  chart      = "grafana"
+  version    = "8.0.5"
   repository       = "https://charts.bitnami.com"
 
   set {

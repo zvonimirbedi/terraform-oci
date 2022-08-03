@@ -3,7 +3,8 @@ resource "helm_release" "nginx_ingress_controller" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "nginx-ingress-controller"
   namespace  = "tools"
-  chart            = "nginx-ingress-controller"
+  chart      = "nginx-ingress-controller"
+  version    = "9.2.24"
   repository       = "https://charts.bitnami.com"
 
   set {

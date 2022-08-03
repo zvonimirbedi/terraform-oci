@@ -3,7 +3,8 @@ resource "helm_release" "jenkins" {
   depends_on = [kubernetes_namespace.namespaces]
   name       = "jenkins"
   namespace  = "tools"
-  chart            = "jenkins"
+  chart      = "jenkins"
+  version    = "10.2.4"
   repository       = "https://charts.bitnami.com"
 
   set {
