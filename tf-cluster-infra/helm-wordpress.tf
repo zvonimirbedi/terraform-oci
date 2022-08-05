@@ -4,7 +4,7 @@ resource "helm_release" "wordpress" {
   name       = "wordpress"
   namespace  = "apps"
   chart      = "wordpress"
-  version    = "15.0.13"
+  version    = "15.0.12"
   repository       = "https://charts.bitnami.com"
 
   set {
@@ -34,7 +34,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "wordpressSkipInstall"
-    value = "true"
+    value = "false"
   }
   set {
     name  = "multisite.enable"
@@ -87,7 +87,23 @@ resource "helm_release" "wordpress" {
     value = var.databasename_mariadb
   }
   set {
+    name  = "wordpressPlugins"
+    value = "jetpack\\, hyperdb"
+  }
+  set {
     name  = "service.type"
     value = "ClusterIP"
+  }
+  set {
+    name  = "livenessProbe.initialDelaySeconds"
+    value = "120"
+  }
+  set {
+    name  = "readinessProbe.initialDelaySeconds"
+    value = "120"
+  }
+  set {
+    name  = "startupProbe.initialDelaySeconds"
+    value = "120"
   }
 }

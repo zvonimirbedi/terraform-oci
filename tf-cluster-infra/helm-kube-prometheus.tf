@@ -13,15 +13,15 @@ resource "helm_release" "kube-prometheus" {
   }
   set {
     name  = "exporters.kube-state-metrics.enabled"
-    value = "false"
+    value = "true"
   }
   set {
     name  = "exporters.node-exporter.enabled"
-    value = "false"
+    value = "true"
   }
   set {
     name  = "operator.enabled"
-    value = "false"
+    value = "true"
   }
   set {
     name  = "alertmanager.enabled"
