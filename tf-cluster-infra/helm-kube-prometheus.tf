@@ -21,7 +21,7 @@ resource "helm_release" "kube-prometheus" {
   }
   set {
     name  = "operator.enabled"
-    value = "true"
+    value = "false"
   }
   set {
     name  = "alertmanager.enabled"
