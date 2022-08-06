@@ -21,7 +21,7 @@ resource "helm_release" "grafana" {
   }
   set {
     name  = "persistence.enabled"
-    value = "true"
+    value = "false"
   }
   set {
     name  = "persistence.existingClaim"
@@ -32,13 +32,22 @@ resource "helm_release" "grafana" {
     value = "grafana-home/"
   }
   set {
-    name  = "datasources.secretName"
-    value =  kubernetes_secret_v1.datasource_secret.metadata[0].name
+    name  = "service.type"
+    value = "ClusterIP"
   }
   set {
     name  = "dashboardsProvider.enabled"
     value = "true"
   }
+  set {
+    name  = "datasources.secretName"
+    value =  kubernetes_secret_v1.datasource_secret.metadata[0].name
+  }
+  set {
+    name  = "plugins"
+    value =  "redis-datasource"
+  }
+  
   set {
     name  = "dashboardsConfigMaps[0].configMapName"
     value =  kubernetes_config_map_v1.configmap_grafana_dashboard_kubernetes_1.metadata[0].name
@@ -46,11 +55,24 @@ resource "helm_release" "grafana" {
   set {
     name  = "dashboardsConfigMaps[0].fileName"
     value =  "configmap_grafana_dashboard_kubernetes_1.json" 
+  }  
+  set {
+    name  = "dashboardsConfigMaps[1].configMapName"
+    value =  kubernetes_config_map_v1.configmap_grafana_dashboard_kubernetes_2.metadata[0].name
   }
   set {
-    name  = "service.type"
-    value = "ClusterIP"
+    name  = "dashboardsConfigMaps[1].fileName"
+    value =  "configmap_grafana_dashboard_kubernetes_2.json" 
   }
+  
+  set {
+    name  = "dashboardsConfigMaps[2].configMapName"
+    value =  kubernetes_config_map_v1.configmap_grafana_dashboard_redis_1.metadata[0].name
+  }
+  set {
+    name  = "dashboardsConfigMaps[2].fileName"
+    value =  "configmap_grafana_dashboard_redis_1.json" 
+  }  
 }
 
 
@@ -77,16 +99,37 @@ resource "kubernetes_secret_v1" "datasource_secret" {
           }
         },
         {
-        "name" : "$${DS_PROMETHEUS}",
-        "type" : "prometheus", 
-        "url" : "http://kube-prometheus-prometheus.networks.svc.cluster.local:9090",
-        "access" : "proxy",
+        "name" : "mariadb",
+        "type" : "mysql", 
+        "url" : "mariadb-primary.databases.svc.cluster.local:3306",
+        "database" : "wordpress",
         "editable" : true,
-        "httpMethod" : "POST"
+        "user" : var.username_mariadb,
+        "secureJsonData" : {
+          "password" : var.password_mariadb
+        }
         "orgId" : 1,
-        "basicAuth" : false
         "jsonData" : {
           "timeInterval" : "5s"
+          }
+        },
+        {
+        "name" : "redis",
+        "type" : "redis-datasource", 
+        "url" : "redis-master.databases.svc.cluster.local:6379",
+        "access" : "proxy",
+        "editable" : true,
+        "isDefault" : true,
+        "orgId" : 1,
+        "secureJsonData" : {
+          "password" : var.password_redis
+        }
+        "jsonData" : {
+          "client" : "standalone",
+          "poolSize" : "5",
+          "timeout" : "10",
+          "pingInterval" : "0",
+          "pipelineWindow" : "0"
           }
         }
       ]
@@ -102,12 +145,50 @@ resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_kubernetes_1" {
     name = "configmap-grafana-dashboard-kubernetes-1"
   }
   data = {
-    "configmap_grafana_dashboard_kubernetes_1.json" = data.http.configmap_grafana_dashboard_kubernetes_1.response_body
+    "configmap_grafana_dashboard_kubernetes_1.json" = replace(data.http.configmap_grafana_dashboard_kubernetes_1.response_body, "$${DS_PROMETHEUS}","prometheus")
   }
 }
 
 data "http" "configmap_grafana_dashboard_kubernetes_1" {
-  url = "https://grafana.com/api/dashboards/6417/revisions/1/download"
+  url = "https://grafana.com/api/dashboards/15760/revisions/1/download"
+
+  request_headers = {
+    Accept = "application/json"
+  }
+}
+
+resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_kubernetes_2" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "tools"
+    name = "configmap-grafana-dashboard-kubernetes-2"
+  }
+  data = {
+    "configmap_grafana_dashboard_kubernetes_2.json" = replace(data.http.configmap_grafana_dashboard_kubernetes_2.response_body, "$${DS_PROMETHEUS}","prometheus")
+  }
+}
+
+data "http" "configmap_grafana_dashboard_kubernetes_2" {
+  url = "https://grafana.com/api/dashboards/15479/revisions/1/download"
+
+  request_headers = {
+    Accept = "application/json"
+  }
+}
+
+resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_redis_1" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "tools"
+    name = "configmap-grafana-dashboard-redis-1"
+  }
+  data = {
+    "configmap_grafana_dashboard_redis_1.json" = replace(data.http.configmap_grafana_dashboard_redis_1.response_body, "$${DS_REDIS}","redis")
+  }
+}
+
+data "http" "configmap_grafana_dashboard_redis_1" {
+  url = "https://grafana.com/api/dashboards/12776/revisions/1/download"
 
   request_headers = {
     Accept = "application/json"
