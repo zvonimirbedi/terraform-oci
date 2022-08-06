@@ -43,4 +43,8 @@ resource "helm_release" "redis" {
     name  = "replica.replicaCount"
     value = "0"
   }
+  set {
+    name  = "metrics.enabled"
+    value = "true"
+  }
 }

@@ -51,4 +51,32 @@ resource "helm_release" "mariadb" {
     name  = "secondary.replicaCount"
     value = "0"
   }
+  set {
+    name  = "metrics.enabled"
+    value = "true"
+  }
+  set {
+    name  = "initdbScriptsConfigMap"
+    value = kubernetes_config_map_v1.configmap_mariadb_init_script.metadata[0].name
+  }
+}
+
+
+resource "kubernetes_config_map_v1" "configmap_mariadb_init_script" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "databases"
+    name = "configmap-mariadb-init-script"
+  }
+  data = {
+    "my2_80.sql" = data.http.configmap_mariadb_init_script.response_body
+  }
+}
+# https://github.com/meob/my2Collector
+data "http" "configmap_mariadb_init_script" {
+  url = "https://raw.githubusercontent.com/meob/my2Collector/master/my2_80.sql"
+
+  request_headers = {
+    Accept = "application/json"
+  }
 }

@@ -73,6 +73,38 @@ resource "helm_release" "grafana" {
     name  = "dashboardsConfigMaps[2].fileName"
     value =  "configmap_grafana_dashboard_redis_1.json" 
   }  
+  set {
+    name  = "dashboardsConfigMaps[3].configMapName"
+    value =  kubernetes_config_map_v1.configmap_grafana_dashboard_redis_2.metadata[0].name
+  }
+  set {
+    name  = "dashboardsConfigMaps[3].fileName"
+    value =  "configmap_grafana_dashboard_redis_2.json" 
+  }    
+  set {
+    name  = "dashboardsConfigMaps[4].configMapName"
+    value =  kubernetes_config_map_v1.configmap_grafana_dashboard_mariadb_1.metadata[0].name
+  }
+  set {
+    name  = "dashboardsConfigMaps[4].fileName"
+    value =  "configmap_grafana_dashboard_mariadb_1.json" 
+  }      
+  set {
+    name  = "dashboardsConfigMaps[5].configMapName"
+    value =  kubernetes_config_map_v1.configmap_grafana_dashboard_mariadb_2.metadata[0].name
+  }
+  set {
+    name  = "dashboardsConfigMaps[5].fileName"
+    value =  "configmap_grafana_dashboard_mariadb_2.json" 
+  }       
+  set {
+    name  = "dashboardsConfigMaps[6].configMapName"
+    value =  kubernetes_config_map_v1.configmap_grafana_dashboard_mariadb_3.metadata[0].name
+  }
+  set {
+    name  = "dashboardsConfigMaps[6].fileName"
+    value =  "configmap_grafana_dashboard_mariadb_3.json" 
+  }  
 }
 
 
@@ -99,7 +131,7 @@ resource "kubernetes_secret_v1" "datasource_secret" {
           }
         },
         {
-        "name" : "mariadb",
+        "name" : "mariadb-master",
         "type" : "mysql", 
         "url" : "mariadb-primary.databases.svc.cluster.local:3306",
         "database" : "wordpress",
@@ -189,6 +221,81 @@ resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_redis_1" {
 
 data "http" "configmap_grafana_dashboard_redis_1" {
   url = "https://grafana.com/api/dashboards/12776/revisions/1/download"
+
+  request_headers = {
+    Accept = "application/json"
+  }
+}
+
+resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_redis_2" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "tools"
+    name = "configmap-grafana-dashboard-redis-2"
+  }
+  data = {
+    "configmap_grafana_dashboard_redis_2.json" = replace(data.http.configmap_grafana_dashboard_redis_2.response_body, "$${DS_PROMETHEUS}","prometheus")
+  }
+}
+
+data "http" "configmap_grafana_dashboard_redis_2" {
+  url = "https://grafana.com/api/dashboards/11835/revisions/1/download"
+
+  request_headers = {
+    Accept = "application/json"
+  }
+}
+
+resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_mariadb_1" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "tools"
+    name = "configmap-grafana-dashboard-mariadb-1"
+  }
+  data = {
+    "configmap_grafana_dashboard_mariadb_1.json" = replace(data.http.configmap_grafana_dashboard_mariadb_1.response_body, "$${DS_PROMETHEUS}","prometheus")
+  }
+}
+
+data "http" "configmap_grafana_dashboard_mariadb_1" {
+  url = "https://grafana.com/api/dashboards/7362/revisions/1/download"
+
+  request_headers = {
+    Accept = "application/json"
+  }
+}
+
+resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_mariadb_2" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "tools"
+    name = "configmap-grafana-dashboard-mariadb-2"
+  }
+  data = {
+    "configmap_grafana_dashboard_mariadb_2.json" = replace(data.http.configmap_grafana_dashboard_mariadb_2.response_body, "$${DS_MYMYSQL}","mariadb-master")
+  }
+}
+
+data "http" "configmap_grafana_dashboard_mariadb_2" {
+  url = "https://grafana.com/api/dashboards/11679/revisions/1/download"
+
+  request_headers = {
+    Accept = "application/json"
+  }
+}
+resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_mariadb_3" {
+  depends_on = [kubernetes_namespace.namespaces]
+  metadata {
+    namespace = "tools"
+    name = "configmap-grafana-dashboard-mariadb-3"
+  }
+  data = {
+    "configmap_grafana_dashboard_mariadb_3.json" = replace(data.http.configmap_grafana_dashboard_mariadb_3.response_body, "$${DS_MYMYSQL}","mariadb-master")
+  }
+}
+# https://github.com/meob/my2Collector
+data "http" "configmap_grafana_dashboard_mariadb_3" {
+  url = "https://grafana.com/api/dashboards/7371/revisions/1/download"
 
   request_headers = {
     Accept = "application/json"

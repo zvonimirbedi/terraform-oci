@@ -31,4 +31,41 @@ resource "helm_release" "kube-prometheus" {
     name  = "prometheus.enabled"
     value = "true"
   }
+  set {
+    name  = "prometheus.additionalScrapeConfigs.enabled"
+    value = "true"
+  }
+  set {
+    name  = "prometheus.additionalScrapeConfigs.type"
+    value = "internal"
+  }
+  set {
+    name  = "prometheus.additionalScrapeConfigs.internal.jobList"
+    value = yamlencode([
+              {
+                "job_name" : "mariadb_master_metrics",
+                "static_configs" : [
+                  {
+                    "targets" : ["mariadb-primary.databases.svc.cluster.local:9104"]
+                  }
+                ]
+              },
+              {
+                "job_name" : "mariadb_slave_metrics",
+                "static_configs" : [
+                  {
+                    "targets" : ["mariadb-secondary.databases.svc.cluster.local:9104"]
+                  }
+                ]
+              },
+              {
+                "job_name" : "redis_metrics",
+                "static_configs" : [
+                  {
+                    "targets" : ["redis-metrics.databases.svc.cluster.local:9121"]
+                  }
+                ]
+              }
+          ])
+  }
 }
