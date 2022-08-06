@@ -21,7 +21,7 @@ resource "helm_release" "grafana" {
   }
   set {
     name  = "persistence.enabled"
-    value = "false"
+    value = "true"
   }
   set {
     name  = "persistence.existingClaim"
