@@ -290,7 +290,7 @@ resource "kubernetes_config_map_v1" "configmap_grafana_dashboard_mariadb_3" {
     name = "configmap-grafana-dashboard-mariadb-3"
   }
   data = {
-    "configmap_grafana_dashboard_mariadb_3.json" = replace(data.http.configmap_grafana_dashboard_mariadb_3.response_body, "$${DS_MYMYSQL}","mariadb-master")
+    "configmap_grafana_dashboard_mariadb_3.json" = replace(data.http.configmap_grafana_dashboard_mariadb_3.response_body, "$${DS_PROMETHEUS}","prometheus")
   }
 }
 # https://github.com/meob/my2Collector
