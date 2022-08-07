@@ -1,4 +1,4 @@
-# https://github.com/cert-manager/cert-manager/blob/master/deploy/charts/cert-manager/README.template.md
+# https://github.com/bitnami/charts/tree/master/bitnami/cert-manager
 resource "helm_release" "cert_manager" {
   depends_on = [kubernetes_namespace.namespaces, helm_release.nginx_ingress_controller]
   provisioner "local-exec" {
