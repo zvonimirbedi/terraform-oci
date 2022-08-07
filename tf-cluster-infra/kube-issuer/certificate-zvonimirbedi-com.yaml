@@ -11,3 +11,4 @@ spec:
   commonName: "*.zvonimirbedi.com"
   dnsNames:
   - "*.zvonimirbedi.com"
+  - "zvonimirbedi.com"

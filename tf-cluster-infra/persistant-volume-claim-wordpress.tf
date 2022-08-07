@@ -45,7 +45,7 @@ resource "kubernetes_persistent_volume_v1" "cluster_wordpress_peristent_volume" 
 resource "kubernetes_persistent_volume_claim_v1" "cluster_wordpress_persistent_volume_claim" {
   metadata {
     name = var.wordpress_block_volume_name
-    namespace = "apps"
+    namespace = "tools"
     annotations = {
       "pv.kubernetes.io/bind-completed" = "yes"
       "pv.kubernetes.io/bound-by-controller" = "yes"

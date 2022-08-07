@@ -86,6 +86,11 @@ variable "jenkins_url" {
   description = "DNS for Jenkins"
 }
 
+variable "wordpress_url" {
+  type        = string
+  description = "DNS for Wordpress"
+}
+
 variable "grafana_url" {
   type        = string
   description = "DNS for Grafana"

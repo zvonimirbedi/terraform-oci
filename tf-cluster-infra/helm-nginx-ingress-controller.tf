@@ -5,7 +5,7 @@ resource "helm_release" "nginx_ingress_controller" {
   namespace  = "tools"
   chart      = "nginx-ingress-controller"
   version    = "9.2.24"
-  repository       = "https://charts.bitnami.com"
+  repository = "https://charts.bitnami.com"
 
   set {
     name  = "service.type"

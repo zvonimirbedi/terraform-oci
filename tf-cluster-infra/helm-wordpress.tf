@@ -2,7 +2,7 @@
 resource "helm_release" "wordpress" {
   depends_on = [kubernetes_namespace.namespaces, helm_release.mariadb]
   name       = "wordpress"
-  namespace  = "apps"
+  namespace  = "tools"
   chart      = "wordpress"
   version    = "15.0.12"
   repository       = "https://charts.bitnami.com"
@@ -49,6 +49,10 @@ resource "helm_release" "wordpress" {
     value = "subdomain"
   }
   set {
+    name  = "multisite.enableNipIoRedirect"
+    value = "true"
+  }
+  set {
     name  = "persistence.enabled"
     value = "true"
   }
@@ -73,6 +77,22 @@ resource "helm_release" "wordpress" {
   set {
     name  = "externalDatabase.port"
     value = "3306"
+  }
+  set {
+    name  = "service.ports.http"
+    value = "80"
+  }
+  set {
+    name  = "service.ports.https"
+    value = "443"
+  }
+  set {
+    name  = "containerPorts.http"
+    value = "80"
+  }
+  set {
+    name  = "containerPorts.https"
+    value = "443"
   }
   set {
     name  = "externalDatabase.user"

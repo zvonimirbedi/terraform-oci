@@ -15,9 +15,9 @@ resource "kubernetes_ingress_v1" "ingress_nginx_default_backend" {
 
     default_backend {
       service {
-        name = "jenkins"
+        name = "wordpress"
         port {
-          number = "80"
+          number = "8080"
         }
       }
     }
