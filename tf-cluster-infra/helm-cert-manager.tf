@@ -75,7 +75,18 @@ resource "null_resource" "cert_secrets_and_isusers" {
     # generate kube config file for new cluster
     interpreter = ["/bin/bash", "-c"]
     command     = <<-EOT
-        kubectl --validate=false apply -f kube-issuer/
+      kubectl --validate=false apply -f ./kube-issuer/cluster-issuer-zvonimirbedi-com.yaml
+      kubectl --validate=false apply -f ./kube-issuer/clusterissuer-secret-zvonimirbedi-com.yaml
+      kubectl --validate=false apply -f ./kube-issuer/certificate-zvonimirbedi-com.yaml
     EOT
+  }
+
+  provisioner "local-exec" {
+    # generate kube config file for new cluster
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
+      kubectl get secret clusterissuer-zvonimirbedi-com --namespace=tools -o yaml | tee ./kube-issuer/clusterissuer-secret-zvonimirbedi-com.yaml
+    EOT
+    when    = destroy
   }
 }
