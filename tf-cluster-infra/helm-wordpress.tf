@@ -7,6 +7,7 @@ resource "helm_release" "wordpress" {
   version    = "15.0.12"
   repository       = "https://charts.bitnami.com"
 
+/*
   set {
     name  = "image.repository"
     value = "bitnami/wordpress-nginx"
@@ -15,7 +16,7 @@ resource "helm_release" "wordpress" {
     name  = "image.tag"
     value = "6.0.1-debian-11-r3"
   }
-  
+  */
   set {
     name  = "wordpressUsername"
     value = var.username_wordpress
@@ -34,6 +35,10 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "wordpressSkipInstall"
+    value = "false"
+  }
+  set {
+    name  = "allowEmptyPassword"
     value = "false"
   }
   set {
@@ -78,6 +83,7 @@ resource "helm_release" "wordpress" {
     name  = "externalDatabase.port"
     value = "3306"
   }
+  /*
   set {
     name  = "service.ports.http"
     value = "80"
@@ -94,6 +100,7 @@ resource "helm_release" "wordpress" {
     name  = "containerPorts.https"
     value = "443"
   }
+  */
   set {
     name  = "externalDatabase.user"
     value = var.username_mariadb
@@ -116,14 +123,14 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "livenessProbe.initialDelaySeconds"
-    value = "120"
+    value = "90"
   }
   set {
     name  = "readinessProbe.initialDelaySeconds"
-    value = "120"
+    value = "90"
   }
   set {
     name  = "startupProbe.initialDelaySeconds"
-    value = "120"
+    value = "90"
   }
 }
