@@ -6,23 +6,21 @@ data "oci_identity_compartments" "cluster_compartment" {
     name = var.cluster_compartment_name
 }
 
-data "oci_core_volumes" "cluster_tools_volume" {
-    #Required
-    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    display_name = var.tools_block_volume_name
-    state = "Available"
+data "oci_identity_availability_domains" "ads" {
+  compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
 }
 
-data "oci_core_volumes" "cluster_database_volume" {
+data "oci_containerengine_clusters" "clusters_list" {
     #Required
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    display_name = var.database_block_volume_name
-    state = "Available"
+
+    #Optional
+    name = var.cluster_name
+    state = ["ACTIVE"]
 }
 
-data "oci_core_volumes" "cluster_wordpress_volume" {
+data "oci_containerengine_node_pools" "cluster_node_pool_1" {
     #Required
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    display_name = var.wordpress_block_volume_name
-    state = "Available"
+
 }

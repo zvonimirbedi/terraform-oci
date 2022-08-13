@@ -9,7 +9,7 @@ resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
   name               = var.cluster_node_pool_1_name
   node_config_details {
     placement_configs {
-      availability_domain = data.oci_core_volumes.cluster_tools_volume.volumes[0].availability_domain
+      availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
       subnet_id           = oci_core_subnet.cluster_private_subnet.id
     } 
     size = var.cluster_node_pool_1_count
@@ -42,7 +42,7 @@ resource "oci_containerengine_node_pool" "cluster_node_pool_1" {
     # generate kube config file for new cluster
     command = <<-EOT
           rm -r /home/botuser/.kube/config
-          oci ce cluster create-kubeconfig --cluster-id ${oci_containerengine_cluster.zvone_cluster.id} --file $HOME/.kube/config --region ${var.region} --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+          oci ce cluster create-kubeconfig --cluster-id ${oci_containerengine_cluster.zvone_cluster.id} --file ${var.provider_kubernetes_config_path} --region ${var.region} --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
           # yes | oci compute instance update --instance-id ${oci_containerengine_node_pool.cluster_node_pool_1.nodes[0].id} --agent-config "{\"is-agent-disabled\": false,\"plugins-config\": [{\"name\": \"Block Volume Management\", \"desiredState\": \"ENABLED\"}]}"
     EOT
   }

@@ -6,11 +6,8 @@ data "oci_identity_compartments" "cluster_compartment" {
     name = var.cluster_compartment_name
 }
 
-data "oci_core_public_ips" "cluster_public_ips" {
-    #Required
-    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    scope = "REGION"
-    lifetime = "RESERVED"
+data "oci_identity_availability_domains" "ads" {
+  compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
 }
 
 data "oci_core_volumes" "cluster_tools_volume" {
@@ -23,7 +20,7 @@ data "oci_core_volumes" "cluster_tools_volume" {
 data "oci_core_volumes" "cluster_database_volume" {
     #Required
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
-    display_name = var.database_block_volume_name
+    display_name = var.databases_block_volume_name
     state = "Available"
 }
 

@@ -28,7 +28,7 @@ resource "oci_network_load_balancer_backend" "cluster_nlb_backend_80" {
   backend_set_name         = oci_network_load_balancer_backend_set.cluster_nlb_backend_set_80.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.cluster_nlb.id
   port                     = var.cluster_node_http_port
-  target_id                = [for node in oci_containerengine_node_pool.cluster_node_pool_1.nodes : node if node.state == "ACTIVE"][count.index].id
+  target_id                = oci_containerengine_node_pool.cluster_node_pool_1.nodes[count.index].id
 }
 
 resource "oci_network_load_balancer_listener" "cluster_nlb_listener_port_80" {
@@ -56,7 +56,7 @@ resource "oci_network_load_balancer_backend" "cluster_nlb_backend_443" {
   backend_set_name         = oci_network_load_balancer_backend_set.cluster_nlb_backend_set_443.name
   network_load_balancer_id = oci_network_load_balancer_network_load_balancer.cluster_nlb.id
   port                     = var.cluster_node_https_port
-  target_id                = [for node in oci_containerengine_node_pool.cluster_node_pool_1.nodes : node if node.state == "ACTIVE"][count.index].id
+  target_id                = oci_containerengine_node_pool.cluster_node_pool_1.nodes[count.index].id
 }
 
 resource "oci_network_load_balancer_listener" "cluster_nlb_listener_port_443" {

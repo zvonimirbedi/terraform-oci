@@ -108,17 +108,36 @@ variable "cluster_node_https_port" {
   description = "Kubernetes cluster node https port"
 }
 
+variable "provider_kubernetes_config_path" {
+  type        = string
+  description = "Local file path to kubernetes config file"
+}
+
 variable "tools_block_volume_name" {
   type        = string
-  description = "Block volume name Tools"
+  description = "Block volume name "
 }
 
-variable "database_block_volume_name" {
+variable "tools_block_volume_size_gb" {
   type        = string
-  description = "Block volume name database"
+  description = "Block volume size in GB"
 }
 
-variable "wordpress_block_volume_name" {
+variable "databases_block_volume_name" {
   type        = string
   description = "Block volume name"
+}
+
+variable "databases_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
+}
+variable "wordpress_block_volume_name" {
+  type        = string
+  description = "Block volume name "
+}
+
+variable "wordpress_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
 }

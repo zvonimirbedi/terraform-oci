@@ -26,33 +26,3 @@ variable "cluster_compartment_description" {
   description = "The public IP name"
   default = "Zvone Compartment for Terraform resources"
 }
-
-variable "tools_block_volume_name" {
-  type        = string
-  description = "Block volume name "
-}
-
-variable "tools_block_volume_size_gb" {
-  type        = string
-  description = "Block volume size in GB"
-}
-
-variable "database_block_volume_name" {
-  type        = string
-  description = "Block volume name"
-}
-
-variable "database_block_volume_size_gb" {
-  type        = string
-  description = "Block volume size in GB"
-}
-variable "wordpress_block_volume_name" {
-  type        = string
-  description = "Block volume name "
-}
-
-variable "wordpress_block_volume_size_gb" {
-  type        = string
-  description = "Block volume size in GB"
-}
-

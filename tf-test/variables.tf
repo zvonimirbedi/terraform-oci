@@ -10,47 +10,6 @@ variable "cluster_compartment_name" {
   default = "Zvone Kubernetes Cluster"
 }
 
-variable "tools_block_volume_name" {
-  type        = string
-  description = "Block volume name tools"
-}
-
-variable "tools_block_volume_size_gb" {
-  type        = string
-  description = "Block volume size in GB for tools"
-}
-
-variable "database_block_volume_name" {
-  type        = string
-  description = "Block volume name database"
-}
-
-variable "database_block_volume_size_gb" {
-  type        = string
-  description = "Block volume size in GB for database"
-}
-
-variable "wordpress_block_volume_name" {
-  type        = string
-  description = "Block volume name"
-}
-
-variable "wordpress_block_volume_size_gb" {
-  type        = string
-  description = "Block volume size in GB"
-}
-
-variable "provider_kubernetes_config_path" {
-  type        = string
-  description = "Local file path to kubernetes config file"
-}
-
-variable "namespace_list" {
-  type    = list(string)
-  default = ["zvone-test-namespace-wrong-variables"]
-  description = "Namespaces to be crated automatically"
-}
-
 variable "docker_registry_address" {
   type        = string
   description = "Docker registry url address"
@@ -101,6 +60,8 @@ variable "clusterissuer_zvonimirbedi" {
   description = "Issuer cert-manager for zvonimirbedi.com"
 }
 
+
+
 variable "username_jenkins" {
   type        = string
   description = "Username credentials"
@@ -140,4 +101,55 @@ variable "password_wordpress" {
 variable "password_redis" {
   type        = string
   description = "Password credentials"
+}
+
+
+variable "tools_block_volume_name" {
+  type        = string
+  description = "Block volume name "
+}
+
+variable "tools_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
+}
+
+variable "databases_block_volume_name" {
+  type        = string
+  description = "Block volume name"
+}
+
+variable "databases_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
+}
+variable "wordpress_block_volume_name" {
+  type        = string
+  description = "Block volume name "
+}
+
+variable "wordpress_block_volume_size_gb" {
+  type        = string
+  description = "Block volume size in GB"
+}
+
+variable "provider_kubernetes_config_path" {
+  type        = string
+  description = "Local file path to kubernetes config file"
+}
+
+variable "cluster_name" {
+  type        = string
+  description = "Cluster Name description"
+}
+
+variable "cluster_node_pool_1_name" {
+  type        = string
+  description = "Cluster node Pool 1 Name description"
+}
+
+variable "namespace_list" {
+  type    = list(string)
+  default = ["terraform-namespace-wrong-variable"]
+  description = "Namespaces to be crated automatically"
 }

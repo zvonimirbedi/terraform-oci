@@ -63,7 +63,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "persistence.existingClaim"
-    value = var.wordpress_block_volume_name
+    value = kubernetes_persistent_volume_claim_v1.cluster_tools_persistent_volume_claim.metadata[0].name
   }  
   set {
     name  = "replicaCount"
@@ -123,14 +123,14 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "livenessProbe.initialDelaySeconds"
-    value = "90"
+    value = "60"
   }
   set {
     name  = "readinessProbe.initialDelaySeconds"
-    value = "90"
+    value = "60"
   }
   set {
     name  = "startupProbe.initialDelaySeconds"
-    value = "90"
+    value = "60"
   }
 }

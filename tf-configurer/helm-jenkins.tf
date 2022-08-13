@@ -29,7 +29,7 @@ resource "helm_release" "jenkins" {
   }
   set {
     name  = "persistence.existingClaim"
-    value = var.tools_block_volume_name
+    value = kubernetes_persistent_volume_claim_v1.cluster_tools_persistent_volume_claim.metadata[0].name
   }
   set {
     name  = "service.type"
