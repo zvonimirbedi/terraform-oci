@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/nginx-ingress-controller
 resource "helm_release" "nginx_ingress_controller" {
-  depends_on = [kubernetes_namespace.namespaces]
+  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools]
   name       = "nginx-ingress-controller"
   namespace  = "tools"
   chart      = "nginx-ingress-controller"

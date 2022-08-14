@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/jenkins
 resource "helm_release" "jenkins" {
-  depends_on = [kubernetes_namespace.namespaces]
+  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools]
   name       = "jenkins"
   namespace  = "tools"
   chart      = "jenkins"
@@ -34,5 +34,17 @@ resource "helm_release" "jenkins" {
   set {
     name  = "service.type"
     value = "ClusterIP"
+  }  
+  set {
+    name  = "livenessProbe.initialDelaySeconds"
+    value = "200"
+  }
+  set {
+    name  = "readinessProbe.initialDelaySeconds"
+    value = "60"
+  }
+  set {
+    name  = "startupProbe.initialDelaySeconds"
+    value = "200"
   }
 }

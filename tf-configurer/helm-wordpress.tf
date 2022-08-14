@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/wordpress
 resource "helm_release" "wordpress" {
-  depends_on = [kubernetes_namespace.namespaces, helm_release.mariadb]
+  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools, helm_release.mariadb]
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"

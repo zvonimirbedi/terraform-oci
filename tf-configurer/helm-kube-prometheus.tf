@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus
 resource "helm_release" "kube-prometheus" {
-  depends_on = [kubernetes_namespace.namespaces]
+  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools]
   name       = "kube-prometheus"
   namespace  = "networks"
   chart      = "kube-prometheus"

@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/mariadb/#installing-the-chart
 resource "helm_release" "mariadb" {
-  depends_on = [kubernetes_secret.namecheap_credentials]
+  depends_on = [kubernetes_secret.namecheap_credentials, null_resource.trigger_cronjob_bucket_to_volume_tools]
   name       = "mariadb"
   namespace  = "databases"
   chart      = "mariadb"
