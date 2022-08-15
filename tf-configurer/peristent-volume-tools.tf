@@ -67,6 +67,7 @@ resource "kubernetes_persistent_volume_claim_v1" "cluster_tools_persistent_volum
   }
 }
 
+
 # https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clicontainer.htm
 resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
   metadata {
@@ -82,7 +83,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
     job_template {
       metadata {}
       spec {
-        # suspend                    = true
+        suspend                    = true
         backoff_limit              = 1
         ttl_seconds_after_finished = 35
         template {
@@ -97,11 +98,15 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
                 <<-EOT
                   date 
                   echo Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
+                  mkdir -p /tools_backup/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
-                  rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools /tools
+                  rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools_backup /tools_backup
+                  if test -f /tools_backup/tools_backup.tar.gz; then
+                    tar -xf /tools_backup/tools_backup.tar.gz -C /
+                  fi
                 EOT
                 ]
               
@@ -166,11 +171,15 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_tools" {
                 <<-EOT
                   date 
                   echo Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  mkdir -p /tools_backup/
+                  tar -zcvf /tools_backup/tools_backup.tar.gz /tools/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
-                  rclone sync /tools AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools
+                  if find /tools_backup -mindepth 1 -maxdepth 1 | read; then
+                    rclone sync /tools_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools_backup/
+                  fi
                 EOT
                 ]
               

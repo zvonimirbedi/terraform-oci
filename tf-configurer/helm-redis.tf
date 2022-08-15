@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/redis
 resource "helm_release" "redis" {
-  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools]
+  depends_on = [kubernetes_namespace.namespaces]
   name       = "redis"
   namespace  = "databases"
   chart      = "redis"

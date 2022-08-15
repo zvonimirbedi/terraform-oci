@@ -81,7 +81,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_databases" {
     job_template {
       metadata {}
       spec {
-        # suspend                    = true
+        suspend                    = true
         backoff_limit              = 1
         ttl_seconds_after_finished = 35
         template {
@@ -95,12 +95,13 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_databases" {
                 "/bin/sh", "-c", 
                 <<-EOT
                   date 
+                  mkdir -p /databases/databases_dump_backup/
                   echo Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
-                  rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases /databases
+                  rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases_dump_backup /databases/databases_dump_backup
                 EOT
                 ]
               
@@ -123,17 +124,127 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_databases" {
   }
 }
 
+resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
+  metadata {
+    name = "cronjob-databases-restore-dump"
+    namespace  = "databases"
+  }
+  spec {
+    concurrency_policy            = "Replace"
+    failed_jobs_history_limit     = 1
+    schedule                      = "0 1 * * *"
+    starting_deadline_seconds     = 10
+    successful_jobs_history_limit = 10
+    job_template {
+      metadata {}
+      spec {
+        suspend                    = true
+        backoff_limit              = 1
+        ttl_seconds_after_finished = 35
+        template {
+          metadata {}
+          spec {
+            automount_service_account_token = "false"
+            container {
+              name    = "mariadb-client"
+              image   = "mariadb:latest"
+              command = [
+                "/bin/sh", "-c", 
+                <<-EOT
+                  date 
+                  echo Starting job for storing SQL backup restore
+                  if test -f /databases/databases_dump_backup/maridab_dump.sql; then
+                    mysql -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} ${var.databasename_mariadb} < /databases/databases_dump_backup/maridab_dump.sql
+                  fi
+                EOT
+                ]   
+              
+              volume_mount {
+                name       = "databases"
+                mount_path = "/databases"
+              }           
+            }
+
+            volume {
+              name = "databases"
+              persistent_volume_claim {
+                claim_name = kubernetes_persistent_volume_claim_v1.cluster_databases_persistent_volume_claim.metadata[0].name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 resource "null_resource" "trigger_cronjob_bucket_to_volume_databases" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_databases]
+  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_databases, kubernetes_cron_job_v1.cronjob_databases_restore_dump]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<-EOT
       kubectl create job cronjob-bucket-to-volume-databases --from=cronjob/cronjob-bucket-to-volume-databases -n databases
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-bucket-to-volume-databases -n databases      
+      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-bucket-to-volume-databases -n databases  
+      kubectl create job cronjob-databases-restore-dump --from=cronjob/cronjob-databases-restore-dump -n databases
+      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-databases-restore-dump -n databases      
     EOT
   }
 }
 
+
+resource "kubernetes_cron_job_v1" "cronjob_databases_backup_dump" {
+  depends_on = [helm_release.mariadb]
+  metadata {
+    name = "cronjob-databases-backup-dump"
+    namespace  = "databases"
+  }
+  spec {
+    concurrency_policy            = "Replace"
+    failed_jobs_history_limit     = 1
+    schedule                      = "0 1 * * *"
+    starting_deadline_seconds     = 10
+    successful_jobs_history_limit = 10
+    job_template {
+      metadata {}
+      spec {
+        # suspend                    = true
+        backoff_limit              = 1
+        ttl_seconds_after_finished = 35
+        template {
+          metadata {}
+          spec {
+            automount_service_account_token = "false"
+            container {
+              name    = "mariadb-client"
+              image   = "mariadb:latest"
+              command = [
+                "/bin/sh", "-c", 
+                <<-EOT
+                  date 
+                  mkdir -p /databases/databases_dump_backup/
+                  echo Starting job for storing SQL backup dump
+                  mysqldump --all-databases --single-transaction --quick --lock-tables=false -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} > /databases/databases_dump_backup/maridab_dump.sql
+                EOT
+                ]   
+              
+              volume_mount {
+                name       = "databases"
+                mount_path = "/databases"
+              }           
+            }
+
+            volume {
+              name = "databases"
+              persistent_volume_claim {
+                claim_name = kubernetes_persistent_volume_claim_v1.cluster_databases_persistent_volume_claim.metadata[0].name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 # https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clicontainer.htm
 resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
@@ -144,7 +255,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
   spec {
     concurrency_policy            = "Replace"
     failed_jobs_history_limit     = 1
-    schedule                      = "0 1 * * *"
+    schedule                      = "15 1 * * *"
     starting_deadline_seconds     = 10
     successful_jobs_history_limit = 10
     job_template {
@@ -165,11 +276,14 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
                 <<-EOT
                   date 
                   echo Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  mkdir /databases/databases_dump_backup/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
-                  rclone sync /databases AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases
+                  if find /databases/databases_dump_backup/ -mindepth 1 -maxdepth 1 | read; then
+                    rclone sync /databases/databases_dump_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases_dump_backup/
+                  fi
                 EOT
                 ]
               
@@ -193,10 +307,12 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
 }
 
 resource "null_resource" "cronjob_volume_to_bucket_databases" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_volume_to_bucket_databases]
+  depends_on = [helm_release.mariadb, kubernetes_cron_job_v1.cronjob_volume_to_bucket_databases, kubernetes_cron_job_v1.cronjob_databases_backup_dump]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<-EOT
+      kubectl create job cronjob-databases-backup-dump --from=cronjob/cronjob-databases-backup-dump -n databases
+      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-databases-backup-dump -n databases   
       kubectl create job cronjob-volume-to-bucket-databases --from=cronjob/cronjob-volume-to-bucket-databases -n databases
       kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-volume-to-bucket-databases -n databases      
     EOT

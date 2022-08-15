@@ -153,3 +153,35 @@ variable "namespace_list" {
   default = ["terraform-namespace-wrong-variable"]
   description = "Namespaces to be crated automatically"
 }
+
+
+variable "STORAGE_TYPE" {
+  type        = string
+  description = "Rclone storage data"
+}
+
+variable "STORAGE_ACCESS_KEY_ID" {
+  type        = string
+  description = "Rclone storage data"
+}
+
+variable "STORAGE_SECRET_ACCESS_KEY" {
+  type        = string
+  description = "Rclone storage data"
+}
+
+variable "STORAGE_REGION" {
+  type        = string
+  description = "Rclone storage data"
+}
+
+variable "STORAGE_BUCKET_NAME" {
+  type        = string
+  description = "Rclone storage data"
+}
+
+variable "cronob_sync_timeout" {
+  type        = string
+  description = "Cronjob timeout in secunds"
+}
+

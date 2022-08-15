@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/wordpress
 resource "helm_release" "wordpress" {
-  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools, helm_release.mariadb]
+  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_wordpress, helm_release.mariadb]
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"
@@ -63,7 +63,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "persistence.existingClaim"
-    value = kubernetes_persistent_volume_claim_v1.cluster_tools_persistent_volume_claim.metadata[0].name
+    value = kubernetes_persistent_volume_claim_v1.cluster_wordpress_persistent_volume_claim.metadata[0].name
   }  
   set {
     name  = "replicaCount"
@@ -115,7 +115,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "wordpressPlugins"
-    value = "jetpack\\, hyperdb"
+    value = "jetpack\\, elementor\\, header-footer-elementor\\, ultimate-addons-for-gutenberg\\, hyperdb"
   }
   set {
     name  = "service.type"
