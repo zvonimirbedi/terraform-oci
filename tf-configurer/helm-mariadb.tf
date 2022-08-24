@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/mariadb/#installing-the-chart
 resource "helm_release" "mariadb" {
-  depends_on = [kubernetes_namespace.namespaces, null_resource.trigger_cronjob_bucket_to_volume_databases]
+  depends_on = [kubernetes_namespace.namespaces, kubernetes_config_map_v1.configmap_mariadb_init_script]
   name       = "mariadb"
   namespace  = "databases"
   chart      = "mariadb"
@@ -79,4 +79,10 @@ data "http" "configmap_mariadb_init_script" {
   request_headers = {
     Accept = "application/json"
   }
+}
+
+resource "time_sleep" "helm_mariadb" {
+  depends_on = [helm_release.mariadb]
+
+  create_duration = "60s"
 }

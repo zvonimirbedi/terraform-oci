@@ -55,9 +55,9 @@ variable "grafana_url" {
   description = "DNS for Grafana"
 }
 
-variable "clusterissuer_zvonimirbedi" {
+variable "clusterissuer_astorx" {
   type        = string
-  description = "Issuer cert-manager for zvonimirbedi.com"
+  description = "Issuer cert-manager for DNS"
 }
 
 

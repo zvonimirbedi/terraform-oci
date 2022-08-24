@@ -80,10 +80,10 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
     schedule                      = "0 1 * * *"
     starting_deadline_seconds     = 10
     successful_jobs_history_limit = 10
+    suspend                       = true
     job_template {
       metadata {}
       spec {
-        suspend                    = true
         backoff_limit              = 1
         ttl_seconds_after_finished = 35
         template {
@@ -103,6 +103,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
+                  export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
                   rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools_backup /tools_backup
                   if test -f /tools_backup/tools_backup.tar.gz; then
                     tar -xf /tools_backup/tools_backup.tar.gz -C /
@@ -177,6 +178,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_tools" {
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
+                  export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
                   if find /tools_backup -mindepth 1 -maxdepth 1 | read; then
                     rclone sync /tools_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools_backup/
                   fi

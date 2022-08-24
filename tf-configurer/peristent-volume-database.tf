@@ -78,10 +78,10 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_databases" {
     schedule                      = "0 1 * * *"
     starting_deadline_seconds     = 10
     successful_jobs_history_limit = 10
+    suspend                       = true
     job_template {
       metadata {}
       spec {
-        suspend                    = true
         backoff_limit              = 1
         ttl_seconds_after_finished = 35
         template {
@@ -101,6 +101,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_databases" {
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
+                  export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
                   rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases_dump_backup /databases/databases_dump_backup
                 EOT
                 ]
@@ -135,10 +136,10 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
     schedule                      = "0 1 * * *"
     starting_deadline_seconds     = 10
     successful_jobs_history_limit = 10
+    suspend                       = true
     job_template {
       metadata {}
       spec {
-        suspend                    = true
         backoff_limit              = 1
         ttl_seconds_after_finished = 35
         template {
@@ -154,8 +155,10 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
                   date 
                   echo Starting job for storing SQL backup restore
                   if test -f /databases/databases_dump_backup/maridab_dump.sql; then
+                    echo Restoring SQL backup
                     mysql -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} ${var.databasename_mariadb} < /databases/databases_dump_backup/maridab_dump.sql
                   fi
+                  echo Finished job for storing SQL backup restore
                 EOT
                 ]   
               
@@ -179,7 +182,7 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
 }
 
 resource "null_resource" "trigger_cronjob_bucket_to_volume_databases" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_databases, kubernetes_cron_job_v1.cronjob_databases_restore_dump]
+  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_databases, kubernetes_cron_job_v1.cronjob_databases_restore_dump, time_sleep.helm_mariadb, helm_release.mariadb]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<-EOT
@@ -193,7 +196,7 @@ resource "null_resource" "trigger_cronjob_bucket_to_volume_databases" {
 
 
 resource "kubernetes_cron_job_v1" "cronjob_databases_backup_dump" {
-  depends_on = [helm_release.mariadb]
+  depends_on = [time_sleep.helm_mariadb, helm_release.mariadb]
   metadata {
     name = "cronjob-databases-backup-dump"
     namespace  = "databases"
@@ -281,6 +284,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
+                  export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
                   if find /databases/databases_dump_backup/ -mindepth 1 -maxdepth 1 | read; then
                     rclone sync /databases/databases_dump_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases_dump_backup/
                   fi
@@ -307,7 +311,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
 }
 
 resource "null_resource" "cronjob_volume_to_bucket_databases" {
-  depends_on = [helm_release.mariadb, kubernetes_cron_job_v1.cronjob_volume_to_bucket_databases, kubernetes_cron_job_v1.cronjob_databases_backup_dump]
+  depends_on = [time_sleep.helm_mariadb, helm_release.mariadb, kubernetes_cron_job_v1.cronjob_volume_to_bucket_databases, kubernetes_cron_job_v1.cronjob_databases_backup_dump]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
     command     = <<-EOT

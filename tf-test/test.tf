@@ -36,6 +36,7 @@ resource "kubernetes_cron_job_v1" "wordpress_volume_to_bucket" {
                   export RCLONE_CONFIG_AWS_STORAGE_ACCESS_KEY_ID='${var.STORAGE_ACCESS_KEY_ID}'
                   export RCLONE_CONFIG_AWS_STORAGE_SECRET_ACCESS_KEY='${var.STORAGE_SECRET_ACCESS_KEY}'
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
+                  export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
 
                   rclone sync /wordpress_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/wordpress_backup/
                   sleep 200

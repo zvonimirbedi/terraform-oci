@@ -56,7 +56,7 @@ resource "kubernetes_ingress_v1" "ingress_nginx_wordpress" {
       }
     }
     tls {
-      secret_name = var.clusterissuer_zvonimirbedi
+      secret_name = var.clusterissuer_astorx
     }
   }
 }

@@ -55,9 +55,9 @@ variable "grafana_url" {
   description = "DNS for Grafana"
 }
 
-variable "clusterissuer_zvonimirbedi" {
+variable "clusterissuer_astorx" {
   type        = string
-  description = "Issuer cert-manager for zvonimirbedi.com"
+  description = "Issuer cert-manager for DNS"
 }
 
 
@@ -178,6 +178,11 @@ variable "STORAGE_REGION" {
 variable "STORAGE_BUCKET_NAME" {
   type        = string
   description = "Rclone storage data"
+}
+
+variable "STORAGE_ENDPOINT" {
+  type        = string
+  description = "Rclone storage endpoint"
 }
 
 variable "cronob_sync_timeout" {

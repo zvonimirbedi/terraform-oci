@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/wordpress
 resource "helm_release" "wordpress" {
-  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_wordpress, helm_release.mariadb]
+  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_wordpress, null_resource.cronjob_volume_to_bucket_databases]
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"
@@ -31,7 +31,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "wordpressBlogName"
-    value = "zvonimirbedi"
+    value = "astorx"
   }
   set {
     name  = "wordpressSkipInstall"
@@ -47,7 +47,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "multisite.host"
-    value = "zvonimirbedi.com"
+    value = "astorx.com"
   }
   set {
     name  = "multisite.networkType"
