@@ -4,7 +4,8 @@ resource "kubernetes_ingress_v1" "ingress_nginx_wordpress" {
     namespace = "tools"
     annotations = {
       # type of authentication  
-      # "nginx.ingress.kubernetes.io/rewrite-target" = "/"      
+      # "nginx.ingress.kubernetes.io/rewrite-target" = "/"    
+      "nginx.ingress.kubernetes.io/proxy-body-size" = "300m"  
     }
   }
   spec {
