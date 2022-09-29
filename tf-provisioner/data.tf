@@ -2,7 +2,7 @@
 
 data "oci_identity_compartments" "cluster_compartment" {
     #Required
-    compartment_id = "ocid1.tenancy.oc1..aaaaaaaan3s7vpqdw76qzgifbvio2cqf76hsinebozowguckoc7vd2xu7qoa"
+    compartment_id = var.root_compartment_ocid
     name = var.cluster_compartment_name
 }
 
@@ -15,4 +15,22 @@ data "oci_core_public_ips" "cluster_public_ips" {
     compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
     scope = "REGION"
     lifetime = "RESERVED"
+}
+
+data "oci_core_volumes" "cluster_databases_volume" {
+    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+    display_name        = var.databases_block_volume_name
+    state = "AVAILABLE"
+}
+
+data "oci_core_volumes" "cluster_tools_volume" {
+    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+    display_name        = var.tools_block_volume_name
+    state = "AVAILABLE"
+}
+
+data "oci_core_volumes" "cluster_wordpress_volume" {
+    compartment_id = data.oci_identity_compartments.cluster_compartment.compartments[0].id
+    display_name        = var.wordpress_block_volume_name
+    state = "AVAILABLE"
 }
