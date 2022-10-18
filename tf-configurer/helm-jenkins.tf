@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/jenkins
 resource "helm_release" "jenkins" {
-  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools]
+  //depends_on = [null_resource.trigger_cronjob_bucket_to_volume_tools]
   name       = "jenkins"
   namespace  = "tools"
   chart      = "jenkins"

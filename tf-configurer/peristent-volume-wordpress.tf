@@ -127,18 +127,6 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_wordpress" {
   }
 }
 
-resource "null_resource" "trigger_cronjob_bucket_to_volume_wordpress" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_wordpress]
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      kubectl create job cronjob-bucket-to-volume-wordpress --from=cronjob/cronjob-bucket-to-volume-wordpress -n tools
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-bucket-to-volume-wordpress -n tools      
-    EOT
-  }
-}
-
-
 # https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clicontainer.htm
 resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_wordpress" {
   metadata {
@@ -201,16 +189,3 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_wordpress" {
     }
   }
 }
-
-resource "null_resource" "cronjob_volume_to_bucket_wordpress" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_volume_to_bucket_wordpress]
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      kubectl create job cronjob-volume-to-bucket-wordpress --from=cronjob/cronjob-volume-to-bucket-wordpress -n tools
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-volume-to-bucket-wordpress -n tools      
-    EOT
-    when        = destroy
-  }
-}
-

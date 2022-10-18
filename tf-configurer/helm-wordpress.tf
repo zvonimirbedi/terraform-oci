@@ -1,6 +1,6 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/wordpress
 resource "helm_release" "wordpress" {
-  depends_on = [null_resource.trigger_cronjob_bucket_to_volume_wordpress, null_resource.cronjob_volume_to_bucket_databases]
+  //depends_on = [null_resource.trigger_cronjob_bucket_to_volume_wordpress, null_resource.cronjob_volume_to_bucket_databases]
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"

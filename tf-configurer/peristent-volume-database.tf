@@ -181,20 +181,6 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
   }
 }
 
-resource "null_resource" "trigger_cronjob_bucket_to_volume_databases" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_databases, kubernetes_cron_job_v1.cronjob_databases_restore_dump, time_sleep.helm_mariadb, helm_release.mariadb]
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      kubectl create job cronjob-bucket-to-volume-databases --from=cronjob/cronjob-bucket-to-volume-databases -n databases
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-bucket-to-volume-databases -n databases  
-      kubectl create job cronjob-databases-restore-dump --from=cronjob/cronjob-databases-restore-dump -n databases
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-databases-restore-dump -n databases      
-    EOT
-  }
-}
-
-
 resource "kubernetes_cron_job_v1" "cronjob_databases_backup_dump" {
   depends_on = [time_sleep.helm_mariadb, helm_release.mariadb]
   metadata {
@@ -307,19 +293,5 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
         }
       }
     }
-  }
-}
-
-resource "null_resource" "cronjob_volume_to_bucket_databases" {
-  depends_on = [time_sleep.helm_mariadb, helm_release.mariadb, kubernetes_cron_job_v1.cronjob_volume_to_bucket_databases, kubernetes_cron_job_v1.cronjob_databases_backup_dump]
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      kubectl create job cronjob-databases-backup-dump --from=cronjob/cronjob-databases-backup-dump -n databases
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-databases-backup-dump -n databases   
-      kubectl create job cronjob-volume-to-bucket-databases --from=cronjob/cronjob-volume-to-bucket-databases -n databases
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-volume-to-bucket-databases -n databases      
-    EOT
-    when        = destroy
   }
 }

@@ -130,18 +130,6 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
   }
 }
 
-resource "null_resource" "trigger_cronjob_bucket_to_volume_tools" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_bucket_to_volume_tools]
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      kubectl create job cronjob-bucket-to-volume-tools --from=cronjob/cronjob-bucket-to-volume-tools -n tools
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-bucket-to-volume-tools -n tools      
-    EOT
-  }
-}
-
-
 # https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clicontainer.htm
 resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_tools" {
   metadata {
@@ -201,17 +189,5 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_tools" {
         }
       }
     }
-  }
-}
-
-resource "null_resource" "cronjob_volume_to_bucket_tools" {
-  depends_on = [kubernetes_cron_job_v1.cronjob_volume_to_bucket_tools]
-  provisioner "local-exec" {
-    interpreter = ["/bin/bash", "-c"]
-    command     = <<-EOT
-      kubectl create job cronjob-volume-to-bucket-tools --from=cronjob/cronjob-volume-to-bucket-tools -n tools
-      kubectl wait --timeout=3600s --for=condition=Complete job/cronjob-volume-to-bucket-tools -n tools      
-    EOT
-    when        = destroy
   }
 }
