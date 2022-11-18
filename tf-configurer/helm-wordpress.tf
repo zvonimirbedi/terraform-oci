@@ -5,7 +5,7 @@ resource "helm_release" "wordpress" {
   namespace  = "tools"
   chart      = "wordpress"
   version    = "15.0.12"
-  repository       = "https://charts.bitnami.com"
+  repository       = "https://charts.bitnami.com/bitnami"
 
 /*
   set {

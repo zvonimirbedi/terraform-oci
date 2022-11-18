@@ -5,7 +5,7 @@ resource "helm_release" "grafana" {
   namespace  = "tools"
   chart      = "grafana"
   version    = "8.0.7"
-  repository       = "https://charts.bitnami.com"
+  repository       = "https://charts.bitnami.com/bitnami"
 
   set {
     name  = "admin.user"

@@ -5,7 +5,7 @@ resource "helm_release" "kube-prometheus" {
   namespace  = "networks"
   chart      = "kube-prometheus"
   version    = "8.0.12"
-  repository = "https://charts.bitnami.com"
+  repository = "https://charts.bitnami.com/bitnami"
 
   set {
     name  = "blackboxExporter.enabled"

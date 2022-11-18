@@ -5,7 +5,7 @@ resource "helm_release" "jenkins" {
   namespace  = "tools"
   chart      = "jenkins"
   version    = "10.2.4"
-  repository       = "https://charts.bitnami.com"
+  repository       = "https://charts.bitnami.com/bitnami"
 
   set {
     name  = "jenkinsUser"

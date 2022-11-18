@@ -5,7 +5,7 @@ resource "helm_release" "mariadb" {
   namespace  = "databases"
   chart      = "mariadb"
   version    = "11.1.4"
-  repository = "https://charts.bitnami.com"
+  repository = "https://charts.bitnami.com/bitnami"
 
   set {
     name  = "architecture"

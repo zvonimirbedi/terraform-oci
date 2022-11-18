@@ -5,7 +5,7 @@ resource "helm_release" "redis" {
   namespace  = "databases"
   chart      = "redis"
   version    = "17.0.7"
-  repository = "https://charts.bitnami.com"
+  repository = "https://charts.bitnami.com/bitnami"
 
   set {
     name  = "architecture"

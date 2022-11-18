@@ -9,7 +9,7 @@ resource "helm_release" "cert_manager" {
   namespace  = "networks"
   chart      = "cert-manager"
   version    = "0.7.6"
-  repository = "https://charts.bitnami.com"
+  repository = "https://charts.bitnami.com/bitnami"
 
   set {
     name  = "installCRDs"
