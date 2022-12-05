@@ -1,10 +1,10 @@
 # https://github.com/bitnami/charts/tree/master/bitnami/wordpress
 resource "helm_release" "wordpress" {
-  //depends_on = [null_resource.trigger_cronjob_bucket_to_volume_wordpress, null_resource.cronjob_volume_to_bucket_databases]
+  depends_on = [kubernetes_namespace.namespaces]
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"
-  version    = "15.0.12"
+  version    = "15.2.17"
   repository       = "https://charts.bitnami.com/bitnami"
 
 /*
