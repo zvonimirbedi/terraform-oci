@@ -109,6 +109,7 @@ resource "helm_release" "grafana" {
 
 
 resource "kubernetes_secret_v1" "datasource_secret" {
+  depends_on = [kubernetes_namespace.namespaces]
   metadata {
     namespace = "tools"
     name = "datasource-secret"
