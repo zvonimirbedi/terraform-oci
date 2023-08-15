@@ -3,6 +3,11 @@ variable "private_key_path" {
   description = "Path to .oci/oci_api_key.pem file"
 }
 
+variable "fingerprint" {
+  type        = string
+  description = "API KEY fingerprint found in OCI Identity > Users > User Details > API Keys"
+}
+
 variable "region" {
   type        = string
   description = "The region to provision the resources in"
