@@ -1,3 +1,8 @@
+variable "private_key_path" {
+  type        = string
+  description = "Path to .oci/oci_api_key.pem file"
+}
+
 variable "region" {
   type        = string
   description = "The region to provision the resources in"
