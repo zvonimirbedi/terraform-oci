@@ -1,6 +1,0 @@
-[DEFAULT]
-user=ocid1.user.oc1..aaaaaaaah2h3bynbpypig2aulr327neo3msswy5ifnumw2kqkooaxoanc3nq
-fingerprint=a6:b5:56:b2:94:7e:b4:51:74:a2:0f:57:a3:c8:24:c0
-tenancy=ocid1.tenancy.oc1..aaaaaaaan3s7vpqdw76qzgifbvio2cqf76hsinebozowguckoc7vd2xu7qoa
-region=eu-frankfurt-1
-key_file=/oracle/.oci/oci_api_key.pem
