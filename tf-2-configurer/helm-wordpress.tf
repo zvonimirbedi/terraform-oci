@@ -4,7 +4,7 @@ resource "helm_release" "wordpress" {
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"
-  version    = "17.0.0"
+  version    = "17.1.2"
   repository       = "https://charts.bitnami.com/bitnami"
 
 /*
@@ -136,5 +136,9 @@ resource "helm_release" "wordpress" {
   set {
     name  = "startupProbe.initialDelaySeconds"
     value = "60"
+  }
+  set {
+    name  = "customPostInitScripts"
+    value = "'post-init.sh' : 'apt update && apt-get install sendmail'"
   }
 }
