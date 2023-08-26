@@ -158,7 +158,7 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
                   echo Starting job for storing SQL backup restore
                   if test -f /databases/databases_dump_backup/maridab_dump.sql; then
                     echo Restoring SQL backup
-                    mysql -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} ${var.databasename_mariadb} < /databases/databases_dump_backup/maridab_dump.sql
+                    mysql -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} ${var.databasename_mariadb} --default-character-set=latin1 < /databases/databases_dump_backup/maridab_dump.sql
                   fi
                   echo Finished job for storing SQL backup restore
                 EOT
@@ -214,7 +214,7 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_backup_dump" {
                   date 
                   mkdir -p /databases/databases_dump_backup/
                   echo Starting job for storing SQL backup dump
-                  mysqldump --all-databases --single-transaction --quick --lock-tables=false -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} > /databases/databases_dump_backup/maridab_dump.sql
+                  mysqldump --all-databases --single-transaction --column-statistics=0 --quick --lock-tables=0 --skip-add-locks -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} > /databases/databases_dump_backup/maridab_dump.sql
                   echo Finished job for storing SQL backup dump
                 EOT
                 ]   
