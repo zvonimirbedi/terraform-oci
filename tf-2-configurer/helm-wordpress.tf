@@ -4,7 +4,7 @@ resource "helm_release" "wordpress" {
   name       = "wordpress"
   namespace  = "tools"
   chart      = "wordpress"
-  version    = "15.2.17"
+  version    = "17.0.0"
   repository       = "https://charts.bitnami.com/bitnami"
 
 /*
@@ -35,7 +35,11 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "wordpressSkipInstall"
-    value = "false"
+    value = "true"
+  }
+  set {
+    name  = "wordpressExtraConfigContent"
+    value = "define('FORCE_SSL_ADMIN'\\, false);"
   }
   set {
     name  = "allowEmptyPassword"

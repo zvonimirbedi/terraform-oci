@@ -21,7 +21,7 @@ resource "helm_release" "redis" {
   }
   set {
     name  = "master.count"
-    value = "1"
+    value = "0"
   }
   set {
     name  = "master.persistence.enabled"

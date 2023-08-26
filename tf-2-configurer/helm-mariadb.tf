@@ -4,7 +4,7 @@ resource "helm_release" "mariadb" {
   name       = "mariadb"
   namespace  = "databases"
   chart      = "mariadb"
-  version    = "11.1.4"
+  version    = "13.1.1"
   repository = "https://charts.bitnami.com/bitnami"
 
   set {
@@ -55,10 +55,10 @@ resource "helm_release" "mariadb" {
     name  = "metrics.enabled"
     value = "true"
   }
-  set {
-    name  = "initdbScriptsConfigMap"
-    value = kubernetes_config_map_v1.configmap_mariadb_init_script.metadata[0].name
-  }
+#   set {
+#    name  = "initdbScriptsConfigMap"
+#    value = kubernetes_config_map_v1.configmap_mariadb_init_script.metadata[0].name
+#  }
 }
 
 
