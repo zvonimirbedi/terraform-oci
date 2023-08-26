@@ -7,7 +7,7 @@ terraform validate
 terraform plan -var-file="../variables.tfvars"
 terraform apply -auto-approve -var-file="../variables.tfvars"
 # apply with 'cherrypick' replace:
-# terraform apply -auto-approve -var-file="../variables.tfvars" -replace=oci_core_volume.cluster_databases_volume 
+# terraform apply -auto-approve -var-file="../variables.tfvars" -replace=oci_core_volume.cluster_tools_volume
 # terraform destroy -auto-approve -var-file="../variables.tfvars"
 ````
 
