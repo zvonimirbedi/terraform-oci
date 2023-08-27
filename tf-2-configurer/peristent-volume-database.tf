@@ -94,7 +94,6 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_databases" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
                   mkdir -p /databases/databases_dump_backup/
                   echo Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
@@ -154,7 +153,6 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_restore_dump" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
                   echo Starting job for storing SQL backup restore
                   if test -f /databases/databases_dump_backup/maridab_dump.sql; then
                     echo Restoring SQL backup
@@ -211,11 +209,10 @@ resource "kubernetes_cron_job_v1" "cronjob_databases_backup_dump" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
                   mkdir -p /databases/databases_dump_backup/
-                  echo Starting job for storing SQL backup dump
+                  echo $(date -u) Starting job for storing SQL backup dump
                   mysqldump --all-databases --single-transaction --column-statistics=0 --quick --lock-tables=0 --skip-add-locks -P 3306 -h mariadb-primary.databases.svc.cluster.local -u ${var.username_mariadb} -p${var.password_mariadb} > /databases/databases_dump_backup/maridab_dump.sql
-                  echo Finished job for storing SQL backup dump
+                  echo $(date -u) Finished job for storing SQL backup dump
                 EOT
                 ]   
               
@@ -266,8 +263,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
-                  echo Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  echo $(date -u) Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
                   mkdir /databases/databases_dump_backup/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_PROVIDER='Other'
@@ -276,11 +272,11 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_databases" {
                   export RCLONE_CONFIG_AWS_STORAGE_REGION='${var.STORAGE_REGION}'
                   export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
                   if find /databases/databases_dump_backup/ -mindepth 1 -maxdepth 1 | read; then
-                    echo Starting Sync
+                    echo $(date -u) Starting Sync
                     rclone sync /databases/databases_dump_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/databases_dump_backup/
-                    echo Finished Sync
+                    echo $(date -u) Finished Sync
                   fi
-                  echo Finished job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  echo $(date -u) Finished job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
                 EOT
                 ]
               
