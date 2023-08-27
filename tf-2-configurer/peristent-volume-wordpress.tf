@@ -93,8 +93,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_wordpress" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
-                  echo Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
+                  echo $(date -u) Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
                   mkdir -p /wordpress_backup/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_PROVIDER='Other'
@@ -104,9 +103,11 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_wordpress" {
                   export RCLONE_CONFIG_AWS_STORAGE_ENDPOINT='${var.STORAGE_ENDPOINT}'
                   rclone sync AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/wordpress_backup/ /wordpress_backup/
                   if test -f /wordpress_backup/wordpress_backup.tar.gz; then
+                    echo $(date -u) Starting data extraction
                     tar -xf /wordpress_backup/wordpress_backup.tar.gz -C /
+                    echo $(date -u) Finished data extraction
                   fi
-                  echo Finished job for storing data from Cloud Bucket to Kubernetes Persistant Volume
+                  echo $(date -u) Finished job for storing data from Cloud Bucket to Kubernetes Persistant Volume
                 EOT
                 ]
               
@@ -157,8 +158,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_wordpress" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
-                  echo Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  echo $(date -u) Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
                   mkdir -p /wordpress_backup/
                   # wordpress home dir
                   tar -zcvf /wordpress_backup/wordpress_backup.tar.gz /wordpress/
@@ -171,7 +171,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_wordpress" {
                   if find /wordpress_backup -mindepth 1 -maxdepth 1 | read; then
                     rclone sync /wordpress_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/wordpress_backup/
                   fi
-                  echo Finished job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  echo $(date -u) Finished job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
                 EOT
                 ]
               

@@ -7,16 +7,16 @@ resource "helm_release" "wordpress" {
   version    = "17.1.2"
   repository       = "https://charts.bitnami.com/bitnami"
 
-/*
+
   set {
     name  = "image.repository"
-    value = "bitnami/wordpress-nginx"
+    value = "bitnami/wordpress"
   }
   set {
     name  = "image.tag"
-    value = "6.0.1-debian-11-r3"
+    value = "6.3.0-debian-11-r15"
   }
-  */
+
   set {
     name  = "wordpressUsername"
     value = var.username_wordpress
@@ -39,7 +39,7 @@ resource "helm_release" "wordpress" {
   }
   set {
     name  = "wordpressExtraConfigContent"
-    value = "define('FORCE_SSL_ADMIN'\\, false);"
+    value = "define('FORCE_SSL_ADMIN'\\, true);"
   }
   set {
     name  = "allowEmptyPassword"
@@ -136,9 +136,9 @@ resource "helm_release" "wordpress" {
   set {
     name  = "startupProbe.initialDelaySeconds"
     value = "60"
-  }
-  set {
-    name  = "customPostInitScripts"
-    value = "'post-init.sh' : 'apt update && apt-get install sendmail'"
-  }
+  }  
+#  set {
+#    name  = "customPostInitScripts"
+#    value = "'post-init.sh' : 'apt-get update && apt-get install sendmail'"
+#  }
 }

@@ -96,8 +96,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
-                  echo Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
+                  echo $(date -u) Starting job for storing data from Cloud Bucket to Kubernetes Persistant Volume
                   mkdir -p /tools_backup/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
                   export RCLONE_CONFIG_AWS_STORAGE_PROVIDER='Other'
@@ -109,7 +108,7 @@ resource "kubernetes_cron_job_v1" "cronjob_bucket_to_volume_tools" {
                   if test -f /tools_backup/tools_backup.tar.gz; then
                     tar -xf /tools_backup/tools_backup.tar.gz -C /
                   fi
-                  echo Finished job for storing data from Cloud Bucket to Kubernetes Persistant Volume
+                  echo $(date -u) Finished job for storing data from Cloud Bucket to Kubernetes Persistant Volume
                 EOT
                 ]
               
@@ -160,8 +159,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_tools" {
               command = [
                 "/bin/sh", "-c", 
                 <<-EOT
-                  date 
-                  echo Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  echo $(date -u) Starting job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
                   mkdir -p /tools_backup/
                   tar -zcvf /tools_backup/tools_backup.tar.gz /tools/
                   export RCLONE_CONFIG_AWS_STORAGE_TYPE='${var.STORAGE_TYPE}'
@@ -173,7 +171,7 @@ resource "kubernetes_cron_job_v1" "cronjob_volume_to_bucket_tools" {
                   if find /tools_backup -mindepth 1 -maxdepth 1 | read; then
                     rclone sync /tools_backup/ AWS_STORAGE:${var.STORAGE_BUCKET_NAME}/tools_backup/
                   fi
-                  echo Finished job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
+                  echo $(date -u) Finished job for storing data from Kubernetes Persistant Volume to Cloud Bucket 
                 EOT
                 ]
               
